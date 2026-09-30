@@ -7,3 +7,359 @@ body {
 div {
   box-sizing: border-box;
 }
+
+/* Login Page */
+
+.login-container {
+  width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.login-container h1 {
+  text-align: center;
+}
+
+.login-container h2 {
+  text-align: center;
+}
+
+.login-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+/* Dashboard */
+
+.dashboard-container {
+  width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.dashboard-container h1 {
+  text-align: center;
+}
+
+.dashboard-container h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.dashboard-container p {
+  text-align: center;
+}
+
+.dashboard-container h3 {
+  margin-top: 30px;
+}
+
+.dashboard-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-menu li {
+  margin: 15px 0;
+}
+
+.dashboard-menu a {
+  display: block;
+  padding: 15px;
+  background-color: #eeeeee;
+  color: black;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.dashboard-menu a:hover {
+  background-color: #dddddd;
+}
+/* Products Page */
+
+.products-container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.products-container h1 {
+  text-align: center;
+}
+
+.products-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.product-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.product-controls input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.product-controls select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.product-card {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+.product-card h3 {
+  margin-top: 0;
+}
+
+.product-price {
+  font-weight: bold;
+}
+
+.product-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.product-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.no-products {
+  text-align: center;
+  padding: 30px;
+}
+/* Add Product and Edit Product */
+
+.product-form-container {
+  width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.product-form-container h1 {
+  text-align: center;
+}
+
+.product-form-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.product-form-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.product-form-container input,
+.product-form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.product-form-container textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.product-form-container button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-message {
+  text-align: center;
+  margin-top: 15px;
+}
+/* Product Details */
+
+.product-details-container {
+  width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.product-details-container h1 {
+  text-align: center;
+}
+
+.product-details-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.product-details-card {
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+.product-details-card h3 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.details-price {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.details-description {
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.add-cart-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.details-message {
+  text-align: center;
+  padding: 30px;
+}
+/* Stage 7 - Buttons, Colors and Hover Effects */
+
+/* Common button style */
+
+button {
+  background-color: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Product buttons */
+
+.product-buttons button:first-child {
+  background-color: #2563eb;
+}
+
+.product-buttons button:first-child:hover {
+  background-color: #1d4ed8;
+}
+
+.product-buttons button:nth-child(2) {
+  background-color: #f59e0b;
+}
+
+.product-buttons button:nth-child(2):hover {
+  background-color: #d97706;
+}
+
+.product-buttons button:nth-child(3) {
+  background-color: #dc2626;
+}
+
+.product-buttons button:nth-child(3):hover {
+  background-color: #b91c1c;
+}
+
+/* Add to Cart button */
+
+.add-cart-button {
+  background-color: #16a34a;
+}
+
+.add-cart-button:hover {
+  background-color: #15803d;
+}
+
+/* Form buttons */
+
+.product-form-container button {
+  background-color: #2563eb;
+}
+
+.product-form-container button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Login button */
+
+.login-container button {
+  background-color: #2563eb;
+}
+
+.login-container button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Card hover effect */
+
+.product-card {
+  transition: 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Dashboard menu hover */
+
+.dashboard-menu a {
+  transition: 0.3s;
+}
+
+.dashboard-menu a:hover {
+  transform: translateX(5px);
+}

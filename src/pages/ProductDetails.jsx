@@ -1,51 +1,78 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const ProductDetails = () => {
   const { id } = useParams()
 
-  const products = [
-    {
-      id: 1,
-      name: 'Laptop',
-      price: 50000,
-      description: 'A powerful laptop for work and study.'
-    },
-    {
-      id: 2,
-      name: 'Mobile Phone',
-      price: 20000,
-      description: 'A modern smartphone with useful features.'
-    },
-    {
-      id: 3,
-      name: 'Headphones',
-      price: 2000,
-      description: 'Comfortable headphones with good sound quality.'
-    }
-  ]
+  const [product, setProduct] = useState(null)
+  const [message, setMessage] = useState('')
 
-  const product = products.find(
-    (product) => product.id === Number(id)
+  useEffect(() => {
+    fetch(`http://localhost:5000/products/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          setProduct(data.data)
+        } else {
+          setMessage(data.message)
+        }
+      })
+      .catch((error) => {
+        console.log('Error fetching product:', error)
+        setMessage('Error fetching product')
+      })
+  }, [id])
+const handleAddToCart = () => {
+  const existingCart =
+    JSON.parse(localStorage.getItem('cart')) || []
+
+  const alreadyInCart = existingCart.some(
+    (item) => item.id === product.id
   )
 
+  if (alreadyInCart) {
+    setMessage('Product is already in cart')
+    return
+  }
+
+  const updatedCart = [...existingCart, product]
+
+  localStorage.setItem(
+    'cart',
+    JSON.stringify(updatedCart)
+  )
+
+  setMessage('Product added to cart!')
+}
   return (
-    <div>
+    <div className="product-details-container">
       <h1>Online Shopping Mart</h1>
 
       <h2>Product Details</h2>
 
       {product ? (
-        <div>
+        <div className="product-details-card">
           <h3>{product.name}</h3>
 
-          <p>Price: ₹{product.price}</p>
+          <p className="details-price">
+            Price: ₹{product.price}
+          </p>
 
-          <p>Description: {product.description}</p>
+          <p className="details-description">
+            Description: {product.description}
+          </p>
 
-          <button>Add to Cart</button>
+          <button
+  className="add-cart-button"
+  onClick={handleAddToCart}
+>
+  Add to Cart
+</button>
         </div>
       ) : (
-        <p>Product not found</p>
+        <p className="details-message">
+          {message || 'Loading product...'}
+        </p>
       )}
     </div>
   )

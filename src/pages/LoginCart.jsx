@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 const LoginCart = () => {
-  const navigate = useNavigate()  
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -30,14 +32,11 @@ const LoginCart = () => {
 
     setMessage('Login successful!')
 
-
     navigate('/dashboard')
-  
   }
-  
 
   return (
-    <div>
+    <div className="login-container">
       <h1>Online Shopping Mart</h1>
 
       <h2>LoginCart</h2>

@@ -1,15 +1,15 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-
-const AddProduct = ({ products, setProducts }) => {
-  
+const AddProduct = () => {
+  const navigate = useNavigate()
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
   const [message, setMessage] = useState('')
 
-  const handleAddProduct = (e) => {
+  const handleAddProduct = async (e) => {
     e.preventDefault()
 
     setMessage('')
@@ -20,29 +20,51 @@ const AddProduct = ({ products, setProducts }) => {
     }
 
     const newProduct = {
-      id: products.length + 1,
       name: name,
       price: Number(price),
       description: description
     }
 
-    setProducts([...products, newProduct])
+    try {
+      const response = await fetch(
+        'http://localhost:5000/products',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newProduct)
+        }
+      )
 
-    setMessage('Product added successfully!')
+      const data = await response.json()
 
-    setName('')
-    setPrice('')
-    setDescription('')
+      if (response.ok) {
+        setMessage('Product added successfully!')
+
+        setName('')
+        setPrice('')
+        setDescription('')
+
+        setTimeout(() => {
+          navigate('/products')
+        }, 1000)
+      } else {
+        setMessage(data.message)
+      }
+    } catch (error) {
+      setMessage('Error adding product')
+      console.log(error)
+    }
   }
 
   return (
-    <div>
+    <div className="product-form-container">
       <h1>Online Shopping Mart</h1>
 
       <h2>Add Product</h2>
 
       <form onSubmit={handleAddProduct}>
-
         <label>Product Name</label>
 
         <input
@@ -51,9 +73,6 @@ const AddProduct = ({ products, setProducts }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-
-        <br />
-        <br />
 
         <label>Price</label>
 
@@ -64,9 +83,6 @@ const AddProduct = ({ products, setProducts }) => {
           onChange={(e) => setPrice(e.target.value)}
         />
 
-        <br />
-        <br />
-
         <label>Description</label>
 
         <textarea
@@ -75,15 +91,12 @@ const AddProduct = ({ products, setProducts }) => {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <br />
-        <br />
-
-        <button type="submit">Add Product</button>
-
+        <button type="submit">
+          Add Product
+        </button>
       </form>
 
-      <p>{message}</p>
-
+      <p className="form-message">{message}</p>
     </div>
   )
 }

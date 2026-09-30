@@ -1,31 +1,31 @@
 import express from 'express'
+import mysql from 'mysql2'
+import cors from 'cors'
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
 const PORT = 5000
 
-const products = [
-  {
-    id: 1,
-    name: 'Laptop',
-    price: 50000,
-    description: 'A powerful laptop for work and study.'
-  },
-  {
-    id: 2,
-    name: 'Mobile Phone',
-    price: 20000,
-    description: 'A modern smartphone with useful features.'
-  },
-  {
-    id: 3,
-    name: 'Headphones',
-    price: 2000,
-    description: 'Comfortable headphones with good sound quality.'
+// MySQL connection
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'shinee@_06',
+  database: 'online_shopping_mart'
+})
+
+// Check MySQL connection
+db.connect((err) => {
+  if (err) {
+    console.log('MySQL connection failed:', err.message)
+    return
   }
-]
+
+  console.log('MySQL connected successfully!')
+})
 
 // Home
 app.get('/', (req, res) => {
@@ -34,10 +34,21 @@ app.get('/', (req, res) => {
 
 // Get all products
 app.get('/products', (req, res) => {
-  res.json({
-    message: 'Products fetched successfully',
-    data: products,
-    status: 200
+  const sql = 'SELECT * FROM products'
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        message: 'Failed to fetch products',
+        error: err.message
+      })
+    }
+
+    res.json({
+      message: 'Products fetched successfully',
+      data: results,
+      status: 200
+    })
   })
 })
 
@@ -45,83 +56,131 @@ app.get('/products', (req, res) => {
 app.get('/products/:id', (req, res) => {
   const id = Number(req.params.id)
 
-  const product = products.find(
-    (product) => product.id === id
-  )
+  const sql = 'SELECT * FROM products WHERE id = ?'
 
-  if (!product) {
-    return res.status(404).json({
-      message: 'Product not found'
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        message: 'Failed to fetch product',
+        error: err.message
+      })
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        message: 'Product not found'
+      })
+    }
+
+    res.json({
+      message: 'Product fetched successfully',
+      data: results[0],
+      status: 200
     })
-  }
-
-  res.json({
-    message: 'Product fetched successfully',
-    data: product,
-    status: 200
   })
 })
 
 // Add new product
 app.post('/products', (req, res) => {
-  const newProduct = req.body
+  const { name, price, description } = req.body
 
-  newProduct.id = products.length + 1
+  const sql = `
+    INSERT INTO products (name, price, description)
+    VALUES (?, ?, ?)
+  `
 
-  products.push(newProduct)
+  db.query(
+    sql,
+    [name, price, description],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          message: 'Failed to add product',
+          error: err.message
+        })
+      }
 
-  res.status(201).json({
-    message: 'Product added successfully',
-    data: newProduct,
-    status: 201
-  })
+      res.status(201).json({
+        message: 'Product added successfully',
+        data: {
+          id: result.insertId,
+          name,
+          price,
+          description
+        },
+        status: 201
+      })
+    }
+  )
 })
 
 // Update product
 app.put('/products/:id', (req, res) => {
   const id = Number(req.params.id)
 
-  const product = products.find(
-    (product) => product.id === id
+  const { name, price, description } = req.body
+
+  const sql = `
+    UPDATE products
+    SET name = ?, price = ?, description = ?
+    WHERE id = ?
+  `
+
+  db.query(
+    sql,
+    [name, price, description, id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          message: 'Failed to update product',
+          error: err.message
+        })
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          message: 'Product not found'
+        })
+      }
+
+      res.json({
+        message: 'Product updated successfully',
+        data: {
+          id,
+          name,
+          price,
+          description
+        },
+        status: 200
+      })
+    }
   )
-
-  if (!product) {
-    return res.status(404).json({
-      message: 'Product not found'
-    })
-  }
-
-  product.name = req.body.name
-  product.price = req.body.price
-  product.description = req.body.description
-
-  res.json({
-    message: 'Product updated successfully',
-    data: product,
-    status: 200
-  })
 })
 
 // Delete product
 app.delete('/products/:id', (req, res) => {
   const id = Number(req.params.id)
 
-  const productIndex = products.findIndex(
-    (product) => product.id === id
-  )
+  const sql = 'DELETE FROM products WHERE id = ?'
 
-  if (productIndex === -1) {
-    return res.status(404).json({
-      message: 'Product not found'
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        message: 'Failed to delete product',
+        error: err.message
+      })
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: 'Product not found'
+      })
+    }
+
+    res.json({
+      message: 'Product deleted successfully',
+      status: 200
     })
-  }
-
-  const deletedProduct = products.splice(productIndex, 1)
-
-  res.json({
-    message: 'Product deleted successfully',
-    data: deletedProduct[0],
-    status: 200
   })
 })
 

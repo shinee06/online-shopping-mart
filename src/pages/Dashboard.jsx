@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="dashboard-container">
       <h1>Online Shopping Mart</h1>
 
       <h2>Dashboard</h2>
@@ -11,7 +11,7 @@ const Dashboard = () => {
 
       <h3>Menu</h3>
 
-      <ul>
+      <ul className="dashboard-menu">
         <li>
           <Link to="/products">Products</Link>
         </li>
@@ -33,4 +33,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
