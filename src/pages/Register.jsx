@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { apiRequest, saveAuthentication } from '../services/api.js'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -11,6 +12,7 @@ const Register = () => {
     confirmPassword: ''
   })
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -21,12 +23,12 @@ const Register = () => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters.')
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters.')
       return
     }
 
@@ -35,19 +37,23 @@ const Register = () => {
       return
     }
 
+    setLoading(true)
     try {
-      const user = {
-        fullName: formData.fullName.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        address: ''
-      }
-
-      localStorage.setItem('user', JSON.stringify(user))
-      navigate('/dashboard')
-    } catch (storageError) {
-      console.error('Error saving registered user:', storageError)
-      setError('Could not save your profile. Please try again.')
+      const result = await apiRequest('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password
+        })
+      })
+      saveAuthentication(result.data)
+      navigate('/customer-dashboard')
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -98,11 +104,11 @@ const Register = () => {
           id="register-password"
           type="password"
           name="password"
-          placeholder="At least 6 characters"
+          placeholder="At least 8 characters"
           value={formData.password}
           onChange={handleChange}
           autoComplete="new-password"
-          minLength="6"
+          minLength="8"
           required
         />
 
@@ -120,7 +126,9 @@ const Register = () => {
 
         {error && <p role="alert">{error}</p>}
 
-        <button type="submit">Create Account</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Creating account...' : 'Create Account'}
+        </button>
       </form>
 
       <p>

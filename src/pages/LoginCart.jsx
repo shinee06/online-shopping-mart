@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { apiRequest, saveAuthentication } from '../services/api.js'
 
 const LoginCart = () => {
   const navigate = useNavigate()
@@ -7,40 +8,25 @@ const LoginCart = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleLoginCart = (e) => {
+  const handleLoginCart = async (e) => {
     e.preventDefault()
-
     setError('')
-    setMessage('')
+    setLoading(true)
 
-    if (email === '' || password === '') {
-      setError('Please enter email and password')
-      return
+    try {
+      const result = await apiRequest('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      saveAuthentication(result.data)
+      navigate('/customer-dashboard')
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setLoading(false)
     }
-
-    if (!email.includes('@')) {
-      setError('Please enter a valid email')
-      return
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
-      return
-    }
-
-    const userData = {
-      fullName: 'Customer User',
-      email,
-      phone: '+91 90000 00000',
-      address: 'Your address'
-    }
-
-    localStorage.setItem('user', JSON.stringify(userData))
-    setMessage('Login successful!')
-
-    navigate('/dashboard')
   }
 
   return (
@@ -50,10 +36,12 @@ const LoginCart = () => {
       <h2>Login</h2>
 
       <form onSubmit={handleLoginCart}>
-        <label>Email</label>
+        <label htmlFor="login-email">Email</label>
 
         <input
+          id="login-email"
           type="email"
+          name="email"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -62,10 +50,12 @@ const LoginCart = () => {
         <br />
         <br />
 
-        <label>Password</label>
+        <label htmlFor="login-password">Password</label>
 
         <input
+          id="login-password"
           type="password"
+          name="password"
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -74,11 +64,12 @@ const LoginCart = () => {
         <br />
         <br />
 
-        <button type="submit">Log in</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Log in'}
+        </button>
       </form>
 
-      <p>{error}</p>
-      <p>{message}</p>
+      {error && <p className="request-error" role="alert">{error}</p>}
       <p>
         Don&apos;t have an account? <Link to="/register">Create one</Link>
       </p>

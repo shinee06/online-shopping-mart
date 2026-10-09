@@ -26,37 +26,39 @@ const Cart = () => {
   }
 
   return (
-    <div>
-      <h1>Shopping Cart</h1>
+    <main className="cart-page">
+      <header className="page-heading">
+        <span className="page-eyebrow">YOUR SELECTION</span>
+        <h1>Shopping Cart</h1>
+        <p>Review your items before you check out.</p>
+      </header>
 
       {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <section className="empty-state">
+          <p>Your cart is empty.</p>
+          <Link className="primary-link" to="/products">Browse Products</Link>
+        </section>
       ) : (
-        <div>
+        <section className="cart-items">
           {cart.map((product) => (
-            <div key={product.id}>
-              <h2>{product.name}</h2>
-
-              <p>Price: ₹{product.price}</p>
-
-              <p>{product.description}</p>
-
-              <button
-                onClick={() => removeProduct(product.id)}
-              >
+            <article className="cart-item" key={product.id}>
+              <div>
+                <h2>{product.name}</h2>
+                <p>{product.description}</p>
+              </div>
+              <strong className="product-price">₹{product.price}</strong>
+              <button className="danger-button" onClick={() => removeProduct(product.id)}>
                 Remove
               </button>
-
-              <hr />
-            </div>
+            </article>
           ))}
 
-          <Link to="/checkout">
-            <button>Proceed to Checkout</button>
+          <Link className="primary-link cart-checkout-link" to="/checkout">
+            Proceed to Checkout
           </Link>
-        </div>
+        </section>
       )}
-    </div>
+    </main>
   )
 }
 

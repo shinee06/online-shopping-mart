@@ -1,8 +1,19 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { apiRequest } from '../services/api.js'
+
+const readStoredCustomer = () => {
+  try {
+    return JSON.parse(localStorage.getItem('user') || '{}')
+  } catch (error) {
+    console.error('Could not read saved customer details:', error)
+    return {}
+  }
+}
 
 const Checkout = () => {
   const navigate = useNavigate()
+  const savedCustomer = readStoredCustomer()
 
   const [cart, setCart] = useState(() => {
     try {
@@ -15,18 +26,21 @@ const Checkout = () => {
   })
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    address: '',
+    fullName: savedCustomer.fullName || '',
+    email: savedCustomer.email || '',
+    address: savedCustomer.address || '',
     city: '',
     zipCode: '',
-    phone: ''
+    phone: savedCustomer.phone || ''
   })
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   const subtotal = useMemo(
     () =>
       cart.reduce(
-        (sum, product) => sum + Number(product.price || 0),
+        (sum, product) =>
+          sum + Number(product.price || 0) * Number(product.quantity || 1),
         0
       ),
     [cart]
@@ -44,76 +58,68 @@ const Checkout = () => {
     }))
   }
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault()
+    setError('')
 
     if (cart.length === 0) {
-      alert('Your cart is empty. Add some products before checkout.')
+      setError('Your cart is empty. Add some products before checkout.')
       return
     }
 
-    const order = {
-      id: Date.now(),
-      customer: {
-        fullName: formData.fullName,
-        email: formData.email,
-        address: formData.address,
-        city: formData.city,
-        zipCode: formData.zipCode,
-        phone: formData.phone
-      },
-      items: cart,
-      subtotal,
-      shipping,
-      total,
-      createdAt: new Date().toISOString()
-    }
-
+    setSubmitting(true)
     try {
-      const existingOrders = JSON.parse(
-        localStorage.getItem('orders') || '[]'
-      )
-
-      localStorage.setItem(
-        'orders',
-        JSON.stringify([...existingOrders, order])
-      )
-
+      await apiRequest('/orders', {
+        method: 'POST',
+        body: JSON.stringify({
+          customer: formData,
+          items: cart.map((product) => ({
+            productId: product.id,
+            quantity: Number(product.quantity || 1)
+          }))
+        })
+      })
       localStorage.setItem('cart', JSON.stringify([]))
       setCart([])
       navigate('/orders')
     } catch (error) {
-      console.log('Error placing order:', error)
-      alert('Something went wrong while placing your order.')
+      setError(error.message)
+    } finally {
+      setSubmitting(false)
     }
   }
 
   if (cart.length === 0) {
     return (
-      <div>
-        <h1>Checkout</h1>
-        <p>Your cart is empty.</p>
-        <Link to="/products">Continue shopping</Link>
-      </div>
+      <main className="checkout-page">
+        <header className="page-heading">
+          <span className="page-eyebrow">ALMOST THERE</span>
+          <h1>Checkout</h1>
+        </header>
+        <section className="empty-state">
+          <p>Your cart is empty.</p>
+          <Link className="primary-link" to="/products">Continue shopping</Link>
+        </section>
+      </main>
     )
   }
 
   return (
-    <div>
-      <h1>Checkout</h1>
+    <main className="checkout-page">
+      <header className="page-heading">
+        <span className="page-eyebrow">ALMOST THERE</span>
+        <h1>Checkout</h1>
+        <Link className="text-link" to="/cart">← Back to Cart</Link>
+      </header>
 
-      <Link to="/cart">Back to Cart</Link>
-
-      <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
-        <form
-          onSubmit={handlePlaceOrder}
-          style={{ flex: 1 }}
-        >
+      <div className="checkout-layout">
+        <form className="checkout-form" onSubmit={handlePlaceOrder}>
           <h2>Shipping Details</h2>
 
           <div>
-            <label>Full Name</label>
+            <label htmlFor="checkout-full-name">Full Name</label>
             <input
+              id="checkout-full-name"
               type="text"
               name="fullName"
               value={formData.fullName}
@@ -123,8 +129,9 @@ const Checkout = () => {
           </div>
 
           <div>
-            <label>Email</label>
+            <label htmlFor="checkout-email">Email</label>
             <input
+              id="checkout-email"
               type="email"
               name="email"
               value={formData.email}
@@ -134,8 +141,9 @@ const Checkout = () => {
           </div>
 
           <div>
-            <label>Address</label>
+            <label htmlFor="checkout-address">Address</label>
             <textarea
+              id="checkout-address"
               name="address"
               value={formData.address}
               onChange={handleChange}
@@ -144,8 +152,9 @@ const Checkout = () => {
           </div>
 
           <div>
-            <label>City</label>
+            <label htmlFor="checkout-city">City</label>
             <input
+              id="checkout-city"
               type="text"
               name="city"
               value={formData.city}
@@ -155,8 +164,9 @@ const Checkout = () => {
           </div>
 
           <div>
-            <label>ZIP Code</label>
+            <label htmlFor="checkout-zip-code">ZIP Code</label>
             <input
+              id="checkout-zip-code"
               type="text"
               name="zipCode"
               value={formData.zipCode}
@@ -166,8 +176,9 @@ const Checkout = () => {
           </div>
 
           <div>
-            <label>Phone</label>
+            <label htmlFor="checkout-phone">Phone</label>
             <input
+              id="checkout-phone"
               type="tel"
               name="phone"
               value={formData.phone}
@@ -176,16 +187,19 @@ const Checkout = () => {
             />
           </div>
 
-          <button type="submit">Place Order</button>
+          {error && <p className="request-error" role="alert">{error}</p>}
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Placing order...' : 'Place Order'}
+          </button>
         </form>
 
-        <div style={{ flex: 1 }}>
+        <section className="checkout-summary">
           <h2>Order Summary</h2>
 
           {cart.map((product) => (
-            <div key={product.id}>
+            <div className="checkout-summary-item" key={product.id}>
               <h3>{product.name}</h3>
-              <p>Price: ₹{product.price}</p>
+              <p>₹{product.price} × {product.quantity || 1}</p>
             </div>
           ))}
 
@@ -194,9 +208,9 @@ const Checkout = () => {
           <p>Subtotal: ₹{subtotal}</p>
           <p>Shipping: ₹{shipping}</p>
           <h3>Total: ₹{total}</h3>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   )
 }
 

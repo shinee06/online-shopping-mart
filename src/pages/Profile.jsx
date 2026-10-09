@@ -1,23 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
-const defaultUser = {
-  fullName: 'John Doe',
-  email: 'john@example.com',
-  phone: '+91 98765 43210',
-  address: '123 Market Street, Bengaluru'
-}
+import { apiRequest } from '../services/api.js'
 
 const Profile = () => {
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = JSON.parse(localStorage.getItem('user') || 'null')
-      return savedUser || defaultUser
+      return JSON.parse(localStorage.getItem('user') || 'null') || {
+        fullName: '',
+        email: '',
+        phone: '',
+        address: ''
+      }
     } catch (error) {
       console.log('Error reading user profile:', error)
-      return defaultUser
+      return { fullName: '', email: '', phone: '', address: '' }
     }
   })
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    apiRequest('/customers/me')
+      .then((result) => {
+        if (active) {
+          setUser(result.data)
+          localStorage.setItem('user', JSON.stringify(result.data))
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          setMessage(error.message)
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -28,23 +54,33 @@ const Profile = () => {
     }))
   }
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault()
+    setMessage('')
 
     try {
-      localStorage.setItem('user', JSON.stringify(user))
-      alert('Profile saved successfully!')
+      const result = await apiRequest('/customers/me', {
+        method: 'PUT',
+        body: JSON.stringify({
+          fullName: user.fullName,
+          phone: user.phone,
+          address: user.address
+        })
+      })
+      const updatedUser = { ...user, ...result.data }
+      setUser(updatedUser)
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      setMessage(result.message)
     } catch (error) {
-      console.log('Error saving user profile:', error)
-      alert('Something went wrong while saving your profile.')
+      setMessage(error.message)
     }
   }
 
   return (
     <main className="profile-page">
       <section className="profile-card">
-        <Link className="profile-back-link" to="/dashboard">
-          Back to Dashboard
+        <Link className="profile-back-link" to="/customer-dashboard">
+          Back to My Dashboard
         </Link>
 
         <header className="profile-heading">
@@ -56,6 +92,8 @@ const Profile = () => {
         </header>
 
         <form className="profile-form" onSubmit={handleSave}>
+          {loading && <p>Loading profile...</p>}
+
           <div className="profile-field">
             <label htmlFor="profile-full-name">Full Name</label>
             <input
@@ -74,7 +112,7 @@ const Profile = () => {
               type="email"
               name="email"
               value={user.email}
-              onChange={handleChange}
+              readOnly
             />
           </div>
 
@@ -103,6 +141,7 @@ const Profile = () => {
           <button className="profile-save-button" type="submit">
             Save Profile
           </button>
+          {message && <p role="status">{message}</p>}
         </form>
       </section>
     </main>

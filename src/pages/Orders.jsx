@@ -1,44 +1,82 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { apiRequest } from '../services/api.js'
 
 const Orders = () => {
-  const [orders] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('orders') || '[]')
-    } catch (error) {
-      console.log('Error reading orders:', error)
-      return []
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let active = true
+
+    apiRequest('/orders')
+      .then((result) => {
+        if (active) {
+          setOrders(result.data)
+        }
+      })
+      .catch((requestError) => {
+        if (active) {
+          setError(requestError.message)
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
     }
-  })
+  }, [])
 
   return (
-    <div>
-      <h1>My Orders</h1>
+    <main className="orders-page">
+      <header className="page-heading">
+        <span className="page-eyebrow">ORDER HISTORY</span>
+        <h1>My Orders</h1>
+        <p>Track the orders you have placed.</p>
+      </header>
 
-      {orders.length === 0 ? (
-        <p>No orders yet.</p>
+      {loading ? (
+        <p>Loading your orders...</p>
+      ) : error ? (
+        <p className="request-error" role="alert">{error}</p>
+      ) : orders.length === 0 ? (
+        <section className="empty-state">
+          <p>No orders yet.</p>
+          <Link className="primary-link" to="/products">Start Shopping</Link>
+        </section>
       ) : (
-        orders.map((order) => (
-          <div key={order.id} style={{ border: '1px solid #ccc', marginBottom: '1rem', padding: '1rem' }}>
-            <h2>Order #{order.id}</h2>
-            <p>Customer: {order.customer.fullName}</p>
-            <p>Email: {order.customer.email}</p>
-            <p>Address: {order.customer.address}, {order.customer.city}</p>
-            <p>Total: ₹{order.total}</p>
+        <div className="order-list">
+          {orders.map((order) => (
+            <article className="order-card" key={order.id}>
+              <h2>Order #{order.id}</h2>
+              <p>Customer: {order.customer.fullName}</p>
+              <p>Email: {order.customer.email}</p>
+              <p>Address: {order.customer.address}, {order.customer.city}</p>
+              <p className="order-total">Total: ₹{order.total}</p>
 
-            <ul>
-              {order.items.map((item) => (
-                <li key={item.id}>
-                  {item.name} - ₹{item.price}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
+              <ul>
+                {order.items.map((item) => (
+                  <li key={`${order.id}-${item.id}`}>
+                    {item.name} × {item.quantity} - ₹{item.price}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
       )}
 
-      <Link to="/products">Continue Shopping</Link>
-    </div>
+      {orders.length > 0 && (
+        <Link className="primary-link orders-shopping-link" to="/products">
+          Continue Shopping
+        </Link>
+      )}
+    </main>
   )
 }
 

@@ -1,51 +1,108 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { apiRequest } from '../services/api.js'
 
 const ProductDetails = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const [product, setProduct] = useState(null)
   const [message, setMessage] = useState('')
+  const [isWishlisted, setIsWishlisted] = useState(false)
 
   useEffect(() => {
-    fetch(`http://localhost:5000/products/${id}`)
-      .then((response) => response.json())
+    let active = true
+
+    apiRequest(`/products/${id}`)
       .then((data) => {
-        if (data.status === 200) {
+        if (active) {
           setProduct(data.data)
-        } else {
-          setMessage(data.message)
         }
       })
       .catch((error) => {
         console.log('Error fetching product:', error)
-        setMessage('Error fetching product')
+        if (active) {
+          setMessage(error.message)
+        }
       })
+
+    if (localStorage.getItem('authToken')) {
+      apiRequest('/wishlist')
+        .then((result) => {
+          if (active) {
+            setIsWishlisted(
+              result.data.some((savedProduct) => String(savedProduct.id) === id)
+            )
+          }
+        })
+        .catch((error) => {
+          if (active) {
+            console.error('Could not load wishlist status:', error)
+          }
+        })
+    }
+
+    return () => {
+      active = false
+    }
   }, [id])
-const handleAddToCart = () => {
-  const existingCart =
-    JSON.parse(localStorage.getItem('cart')) || []
 
-  const alreadyInCart = existingCart.some(
-    (item) => item.id === product.id
-  )
+  const toggleWishlist = async () => {
+    if (!localStorage.getItem('authToken')) {
+      navigate('/login')
+      return
+    }
 
-  if (alreadyInCart) {
-    setMessage('Product is already in cart')
-    return
+    try {
+      if (isWishlisted) {
+        await apiRequest(`/wishlist/${product.id}`, { method: 'DELETE' })
+        setIsWishlisted(false)
+        setMessage('Removed from your wishlist.')
+      } else {
+        await apiRequest('/wishlist', {
+          method: 'POST',
+          body: JSON.stringify({ productId: product.id })
+        })
+        setIsWishlisted(true)
+        setMessage('Saved to your wishlist.')
+      }
+      window.dispatchEvent(new Event('wishlistchange'))
+    } catch (error) {
+      setMessage(error.message)
+    }
   }
 
-  const updatedCart = [...existingCart, product]
+  const handleAddToCart = () => {
+    if (!localStorage.getItem('authToken')) {
+      navigate('/login')
+      return
+    }
 
-  localStorage.setItem(
-    'cart',
-    JSON.stringify(updatedCart)
-  )
+    try {
+      const existingCart = JSON.parse(localStorage.getItem('cart') || '[]')
+      const alreadyInCart = existingCart.some(
+        (item) => item.id === product.id
+      )
 
-  setMessage('Product added to cart!')
-}
+      if (alreadyInCart) {
+        setMessage('Product is already in cart')
+        return
+      }
+
+      localStorage.setItem(
+        'cart',
+        JSON.stringify([...existingCart, product])
+      )
+      setMessage('Product added to cart!')
+    } catch (error) {
+      console.error('Error saving shopping cart:', error)
+      setMessage('Could not update your cart. Please try again.')
+    }
+  }
+
   return (
     <div className="product-details-container">
+      <Link className="text-link" to="/shop">← Back to Shop</Link>
       <h1>Online Shopping Mart</h1>
 
       <h2>Product Details</h2>
@@ -63,11 +120,19 @@ const handleAddToCart = () => {
           </p>
 
           <button
-  className="add-cart-button"
-  onClick={handleAddToCart}
->
-  Add to Cart
-</button>
+            className="add-cart-button"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
+          <button
+            className="wishlist-toggle"
+            aria-pressed={isWishlisted}
+            onClick={toggleWishlist}
+          >
+            {isWishlisted ? '♥ Saved to Wishlist' : '♡ Save to Wishlist'}
+          </button>
+          {message && <p role="status">{message}</p>}
         </div>
       ) : (
         <p className="details-message">
