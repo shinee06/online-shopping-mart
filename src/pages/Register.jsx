@@ -58,11 +58,12 @@ const Register = () => {
   }
 
   return (
-    <main className="login-container">
-      <h1>Online Shopping Mart</h1>
-      <h2>Create Account</h2>
+    <main className="auth-page">
+      <section className="login-container">
+        <h1>Online Shopping Mart</h1>
+        <h2>Create Account</h2>
 
-      <form onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="register-full-name">Full Name</label>
         <input
           id="register-full-name"
@@ -124,16 +125,17 @@ const Register = () => {
           required
         />
 
-        {error && <p role="alert">{error}</p>}
+          {error && <p className="request-error" role="alert">{error}</p>}
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating account...' : 'Create Account'}
-        </button>
-      </form>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Creating account...' : 'Create Account'}
+          </button>
+        </form>
 
-      <p>
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
+        <p>
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
+      </section>
     </main>
   )
 }

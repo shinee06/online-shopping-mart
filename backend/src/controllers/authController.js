@@ -1,6 +1,9 @@
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto'
 import { promisify } from 'node:util'
-import db from '../config/db.js'
+import {
+  createCustomer,
+  findCustomerByEmail
+} from '../dao/customerDAO.js'
 import { createAuthToken } from '../utils/authToken.js'
 
 const scrypt = promisify(scryptCallback)
@@ -60,18 +63,12 @@ export const register = async (req, res, next) => {
   try {
     const normalizedEmail = email.trim().toLowerCase()
     const passwordHash = await hashPassword(password)
-    const [result] = await db.execute(
-      `INSERT INTO customers (full_name, email, phone, address, password_hash)
-       VALUES (?, ?, ?, '', ?)`,
-      [fullName.trim(), normalizedEmail, phone.trim(), passwordHash]
-    )
-    const customer = {
-      id: result.insertId,
-      full_name: fullName.trim(),
+    const customer = await createCustomer({
+      fullName: fullName.trim(),
       email: normalizedEmail,
       phone: phone.trim(),
-      address: ''
-    }
+      passwordHash
+    })
 
     return res.status(201).json({
       message: 'Account created successfully',
@@ -102,12 +99,7 @@ export const login = async (req, res, next) => {
   }
 
   try {
-    const [customers] = await db.execute(
-      `SELECT id, full_name, email, phone, address, password_hash
-       FROM customers WHERE email = ? LIMIT 1`,
-      [email.trim().toLowerCase()]
-    )
-    const customer = customers[0]
+    const customer = await findCustomerByEmail(email.trim().toLowerCase())
 
     if (!customer || !(await verifyPassword(password, customer.password_hash))) {
       return res.status(401).json({ message: 'Invalid email or password' })

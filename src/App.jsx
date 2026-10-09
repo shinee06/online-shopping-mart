@@ -3,7 +3,8 @@ import {
   Navigate,
   Outlet,
   Route,
-  Routes
+  Routes,
+  Link
 } from 'react-router-dom'
 
 import LoginCart from './pages/LoginCart.jsx'
@@ -20,11 +21,19 @@ import Register from './pages/Register.jsx'
 import Shop from './pages/Shop.jsx'
 import CustomerDashboard from './pages/CustomerDashboard.jsx'
 import Wishlist from './pages/Wishlist.jsx'
+import AdminSettings from './admin/AdminSettings.jsx'
 
 const CustomerOnly = () => (
   localStorage.getItem('authToken')
     ? <Outlet />
     : <Navigate to="/login" replace />
+)
+
+const DashboardShortcut = () => (
+  <Link className="dashboard-shortcut" to="/dashboard" aria-label="Open dashboard">
+    <span aria-hidden="true">⌂</span>
+    Dashboard
+  </Link>
 )
 
 const App = () => {
@@ -39,6 +48,8 @@ const App = () => {
         <Route path="/register" element={<Register />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/admin/settings" element={<AdminSettings />} />
 
         <Route
           path="/products"
@@ -72,6 +83,7 @@ const App = () => {
         </Route>
 
       </Routes>
+      <DashboardShortcut />
     </BrowserRouter>
   )
 }

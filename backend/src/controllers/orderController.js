@@ -1,6 +1,7 @@
-import db from '../config/db.js'
-
-const shippingFee = 200
+import {
+  createOrder as createOrderInDAO,
+  listOrdersByCustomer
+} from '../dao/orderDAO.js'
 
 export const placeOrder = async (req, res, next) => {
   const { items, customer } = req.body
@@ -47,129 +48,24 @@ export const placeOrder = async (req, res, next) => {
     return res.status(400).json({ message: 'Maximum quantity per product is 99' })
   }
 
-  let connection
   try {
-    connection = await db.getConnection()
-    await connection.beginTransaction()
-
-    const productIds = [...quantities.keys()]
-    const placeholders = productIds.map(() => '?').join(', ')
-    const [products] = await connection.execute(
-      `SELECT id, name, price FROM products WHERE id IN (${placeholders})`,
-      productIds
-    )
-
-    if (products.length !== productIds.length) {
-      await connection.rollback()
-      return res.status(400).json({ message: 'One or more selected products no longer exist' })
-    }
-
-    const subtotal = products.reduce(
-      (sum, product) => sum + Number(product.price) * quantities.get(product.id),
-      0
-    )
-    const total = subtotal + shippingFee
-    const [orderResult] = await connection.execute(
-      `INSERT INTO orders
-       (customer_id, customer_name, customer_email, customer_phone, address, city, zip_code, subtotal, shipping, total)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        req.customerId,
-        customer.fullName.trim(),
-        customer.email.trim().toLowerCase(),
-        customer.phone.trim(),
-        customer.address.trim(),
-        customer.city.trim(),
-        customer.zipCode.trim(),
-        subtotal,
-        shippingFee,
-        total
-      ]
-    )
-
-    for (const product of products) {
-      await connection.execute(
-        `INSERT INTO order_items (order_id, product_id, product_name, unit_price, quantity)
-         VALUES (?, ?, ?, ?, ?)`,
-        [
-          orderResult.insertId,
-          product.id,
-          product.name,
-          product.price,
-          quantities.get(product.id)
-        ]
-      )
-    }
-
-    await connection.commit()
+    const order = await createOrderInDAO(req.customerId, customer, quantities)
     return res.status(201).json({
       message: 'Order placed successfully',
-      data: {
-        id: orderResult.insertId,
-        subtotal,
-        shipping: shippingFee,
-        total
-      }
+      data: order
     })
   } catch (error) {
-    if (connection) {
-      await connection.rollback()
+    if (error.statusCode === 400) {
+      return res.status(error.statusCode).json({ message: error.message })
     }
     return next(error)
-  } finally {
-    if (connection) {
-      connection.release()
-    }
   }
 }
 
 export const getOrders = async (req, res, next) => {
   try {
-    const [rows] = await db.execute(
-      `SELECT
-         o.id, o.customer_name, o.customer_email, o.customer_phone,
-         o.address, o.city, o.zip_code, o.subtotal, o.shipping, o.total,
-         o.created_at, oi.product_id, oi.product_name, oi.unit_price,
-         oi.quantity
-       FROM orders o
-       LEFT JOIN order_items oi ON oi.order_id = o.id
-       WHERE o.customer_id = ?
-       ORDER BY o.created_at DESC, o.id DESC`,
-      [req.customerId]
-    )
-    const orderMap = new Map()
-
-    for (const row of rows) {
-      if (!orderMap.has(row.id)) {
-        orderMap.set(row.id, {
-          id: row.id,
-          customer: {
-            fullName: row.customer_name,
-            email: row.customer_email,
-            phone: row.customer_phone,
-            address: row.address,
-            city: row.city,
-            zipCode: row.zip_code
-          },
-          subtotal: Number(row.subtotal),
-          shipping: Number(row.shipping),
-          total: Number(row.total),
-          createdAt: row.created_at,
-          items: []
-        })
-      }
-
-      if (row.product_name !== null) {
-        orderMap.get(row.id).items.push({
-          id: row.product_id,
-          name: row.product_name,
-          price: Number(row.unit_price),
-          quantity: row.quantity
-        })
-      }
-    }
-
-    return res.json({ data: [...orderMap.values()] })
+    const orders = await listOrdersByCustomer(req.customerId)
+    return res.json({ data: orders })
   } catch (error) {
     return next(error)
   }

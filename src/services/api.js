@@ -1,6 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
-export const apiRequest = async (path, options = {}) => {
+export const apiRequest = async (path, options = {}, baseUrl = API_BASE_URL) => {
   const headers = new Headers(options.headers || {})
 
   if (options.body !== undefined) {
@@ -14,13 +14,13 @@ export const apiRequest = async (path, options = {}) => {
 
   let response
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(`${baseUrl}${path}`, {
       ...options,
       headers
     })
   } catch (error) {
     throw new Error(
-      `Cannot reach the backend at ${API_BASE_URL}. Start the backend with "npm start" from the backend folder. If it reports ".env not found", copy .env.example to .env and enter your local MySQL settings.`,
+      `Cannot reach the backend at ${baseUrl}. Start the backend with "npm start" from the backend folder. If it reports ".env not found", copy .env.example to .env and enter your local MySQL settings.`,
       {
       cause: error
       }
@@ -40,6 +40,10 @@ export const apiRequest = async (path, options = {}) => {
 
   return result
 }
+
+export const apiRequestRoot = (path, options = {}) => (
+  apiRequest(path, options, new URL(API_BASE_URL).origin)
+)
 
 export const saveAuthentication = ({ customer, token }) => {
   localStorage.setItem('authToken', token)

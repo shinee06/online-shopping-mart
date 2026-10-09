@@ -76,6 +76,7 @@ const Profile = () => {
     }
   }
 
+
   return (
     <main className="profile-page">
       <section className="profile-card">
@@ -143,6 +144,7 @@ const Profile = () => {
           </button>
           {message && <p role="status">{message}</p>}
         </form>
+
       </section>
     </main>
   )

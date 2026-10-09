@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import {
   getProfile,
-  updateProfile
+  updateProfile,
 } from '../controllers/customerController.js'
 import requireAuth from '../middleware/requireAuth.js'
 

@@ -1,15 +1,12 @@
-import db from '../config/db.js'
+import {
+  addWishlistItem,
+  listWishlistByCustomer,
+  removeWishlistItem
+} from '../dao/wishlistDAO.js'
 
 export const getWishlist = async (req, res, next) => {
   try {
-    const [products] = await db.execute(
-      `SELECT p.id, p.name, p.price, p.description, w.created_at AS saved_at
-       FROM wishlist_items w
-       INNER JOIN products p ON p.id = w.product_id
-       WHERE w.customer_id = ?
-       ORDER BY w.created_at DESC`,
-      [req.customerId]
-    )
+    const products = await listWishlistByCustomer(req.customerId)
 
     return res.json({ data: products })
   } catch (error) {
@@ -25,21 +22,10 @@ export const addToWishlist = async (req, res, next) => {
   }
 
   try {
-    const [products] = await db.execute(
-      'SELECT id FROM products WHERE id = ? LIMIT 1',
-      [productId]
-    )
-
-    if (!products[0]) {
+    const added = await addWishlistItem(req.customerId, productId)
+    if (!added) {
       return res.status(404).json({ message: 'Product not found' })
     }
-
-    await db.execute(
-      `INSERT INTO wishlist_items (customer_id, product_id)
-       VALUES (?, ?)
-       ON DUPLICATE KEY UPDATE created_at = created_at`,
-      [req.customerId, productId]
-    )
 
     return res.status(201).json({
       message: 'Product saved to your wishlist',
@@ -58,12 +44,8 @@ export const removeFromWishlist = async (req, res, next) => {
   }
 
   try {
-    const [result] = await db.execute(
-      'DELETE FROM wishlist_items WHERE customer_id = ? AND product_id = ?',
-      [req.customerId, productId]
-    )
-
-    if (result.affectedRows === 0) {
+    const removed = await removeWishlistItem(req.customerId, productId)
+    if (!removed) {
       return res.status(404).json({ message: 'Product is not in your wishlist' })
     }
 

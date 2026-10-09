@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { apiRequest } from '../services/api.js'
+import OrderDAO from '../dao/OrderDAO.jsx'
 
 const Orders = () => {
   const [orders, setOrders] = useState([])
@@ -10,10 +10,10 @@ const Orders = () => {
   useEffect(() => {
     let active = true
 
-    apiRequest('/orders')
-      .then((result) => {
+    OrderDAO.getAll()
+      .then((data) => {
         if (active) {
-          setOrders(result.data)
+          setOrders(data)
         }
       })
       .catch((requestError) => {

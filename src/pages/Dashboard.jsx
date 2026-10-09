@@ -61,6 +61,17 @@ const Dashboard = () => {
               <span className="dashboard-menu-arrow" aria-hidden="true">→</span>
             </Link>
           </li>
+
+          <li>
+            <Link to="/admin/settings">
+              <span className="dashboard-menu-icon details-icon" aria-hidden="true">⚙</span>
+              <span className="dashboard-menu-copy">
+                <strong>Admin Settings</strong>
+                <span>Manage store details and dashboard preferences</span>
+              </span>
+              <span className="dashboard-menu-arrow" aria-hidden="true">→</span>
+            </Link>
+          </li>
         </ul>
       </div>
     </main>

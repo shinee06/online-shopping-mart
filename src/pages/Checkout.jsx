@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { apiRequest } from '../services/api.js'
+import OrderDAO from '../dao/OrderDAO.jsx'
 
 const readStoredCustomer = () => {
   try {
@@ -69,15 +69,9 @@ const Checkout = () => {
 
     setSubmitting(true)
     try {
-      await apiRequest('/orders', {
-        method: 'POST',
-        body: JSON.stringify({
-          customer: formData,
-          items: cart.map((product) => ({
-            productId: product.id,
-            quantity: Number(product.quantity || 1)
-          }))
-        })
+      await OrderDAO.create({
+        customer: formData,
+        items: cart
       })
       localStorage.setItem('cart', JSON.stringify([]))
       setCart([])

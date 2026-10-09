@@ -50,3 +50,19 @@ CREATE TABLE IF NOT EXISTS wishlist_items (
     ON DELETE CASCADE,
   INDEX idx_wishlist_product (product_id)
 );
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  customer_id INT UNSIGNED NOT NULL,
+  rating TINYINT UNSIGNED NOT NULL,
+  review_text VARCHAR(2000) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT chk_reviews_rating CHECK (rating BETWEEN 1 AND 5),
+  CONSTRAINT fk_reviews_customer
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+    ON DELETE CASCADE,
+  CONSTRAINT uq_reviews_customer_product UNIQUE (customer_id, product_id),
+  INDEX idx_reviews_product_created (product_id, created_at)
+);
