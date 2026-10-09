@@ -57,6 +57,31 @@ div {
   text-align: center;
 }
 
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard-header h1 {
+  flex: 1;
+  margin: 0;
+}
+
+.dashboard-profile-link {
+  padding: 10px 16px;
+  border-radius: 6px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.dashboard-profile-link:hover {
+  background-color: #1d4ed8;
+}
+
 .dashboard-container h2 {
   text-align: center;
   margin-bottom: 10px;
@@ -362,4 +387,122 @@ button:hover {
 
 .dashboard-menu a:hover {
   transform: translateX(5px);
+}
+
+.profile-page {
+  min-height: 100vh;
+  padding: 48px 20px;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background-color: white;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 8%);
+}
+
+.profile-back-link {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.profile-back-link:hover {
+  text-decoration: underline;
+}
+
+.profile-heading {
+  margin: 24px 0 28px;
+  text-align: center;
+}
+
+.profile-avatar {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  place-items: center;
+  border-radius: 50%;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.profile-heading h1 {
+  margin: 0 0 8px;
+  color: #111827;
+}
+
+.profile-heading p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.profile-form {
+  display: grid;
+  gap: 18px;
+}
+
+.profile-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.profile-field input,
+.profile-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background-color: #fff;
+  color: #111827;
+  font: inherit;
+}
+
+.profile-field textarea {
+  resize: vertical;
+}
+
+.profile-field input:focus,
+.profile-field textarea:focus {
+  border-color: #2563eb;
+  outline: 3px solid rgb(37 99 235 / 15%);
+}
+
+.profile-save-button {
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    width: calc(100% - 32px);
+    padding: 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.4rem;
+    text-align: left;
+  }
+
+  .profile-page {
+    padding: 24px 16px;
+  }
+
+  .profile-card {
+    padding: 24px 20px;
+  }
 }

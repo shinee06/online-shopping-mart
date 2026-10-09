@@ -1,21 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Cart = () => {
-  const [cart, setCart] = useState([])
-
-  useEffect(() => {
+  const [cart, setCart] = useState(() => {
     try {
       const data = localStorage.getItem('cart')
-
-      if (data) {
-        const savedCart = JSON.parse(data)
-        setCart(savedCart)
-      }
+      return data ? JSON.parse(data) : []
     } catch (error) {
       console.log('Error reading cart:', error)
-      setCart([])
+      return []
     }
-  }, [])
+  })
 
   const removeProduct = (id) => {
     const updatedCart = cart.filter(
@@ -55,6 +50,10 @@ const Cart = () => {
               <hr />
             </div>
           ))}
+
+          <Link to="/checkout">
+            <button>Proceed to Checkout</button>
+          </Link>
         </div>
       )}
     </div>

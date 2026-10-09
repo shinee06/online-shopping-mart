@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const LoginCart = () => {
   const navigate = useNavigate()
@@ -30,6 +30,14 @@ const LoginCart = () => {
       return
     }
 
+    const userData = {
+      fullName: 'Customer User',
+      email,
+      phone: '+91 90000 00000',
+      address: 'Your address'
+    }
+
+    localStorage.setItem('user', JSON.stringify(userData))
     setMessage('Login successful!')
 
     navigate('/dashboard')
@@ -39,7 +47,7 @@ const LoginCart = () => {
     <div className="login-container">
       <h1>Online Shopping Mart</h1>
 
-      <h2>LoginCart</h2>
+      <h2>Login</h2>
 
       <form onSubmit={handleLoginCart}>
         <label>Email</label>
@@ -66,11 +74,14 @@ const LoginCart = () => {
         <br />
         <br />
 
-        <button type="submit">LoginCart</button>
+        <button type="submit">Log in</button>
       </form>
 
       <p>{error}</p>
       <p>{message}</p>
+      <p>
+        Don&apos;t have an account? <Link to="/register">Create one</Link>
+      </p>
     </div>
   )
 }

@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom'
 const Dashboard = () => {
   return (
     <div className="dashboard-container">
-      <h1>Online Shopping Mart</h1>
+      <header className="dashboard-header">
+        <h1>Online Shopping Mart</h1>
+        <Link className="dashboard-profile-link" to="/profile">
+          Profile
+        </Link>
+      </header>
 
       <h2>Dashboard</h2>
 
@@ -27,6 +32,7 @@ const Dashboard = () => {
         <li>
           <Link to="/products">Product Details</Link>
         </li>
+
       </ul>
     </div>
   )
