@@ -1,11 +1,10 @@
 import {
   getOrdersForCustomer,
-  placeOrder as placeOrderInService
+  requestOrderOtp,
+  verifyOrderOtp
 } from '../../services/orderService.js'
 
-export const placeOrder = async (req, res, next) => {
-  const { items, customer } = req.body
-
+const validateOrder = ({ items, customer }) => {
   if (
     !Array.isArray(items) ||
     items.length === 0 ||
@@ -23,7 +22,7 @@ export const placeOrder = async (req, res, next) => {
     !customer.zipCode.trim() ||
     !customer.phone.trim()
   ) {
-    return res.status(400).json({ message: 'Provide items and complete shipping details' })
+    return { error: 'Provide items and complete shipping details' }
   }
 
   const quantities = new Map()
@@ -38,24 +37,45 @@ export const placeOrder = async (req, res, next) => {
       quantity < 1 ||
       quantity > 99
     ) {
-      return res.status(400).json({ message: 'Each order item needs a valid product and quantity' })
+      return { error: 'Each order item needs a valid product and quantity' }
     }
 
     quantities.set(productId, (quantities.get(productId) || 0) + quantity)
   }
 
   if ([...quantities.values()].some((quantity) => quantity > 99)) {
-    return res.status(400).json({ message: 'Maximum quantity per product is 99' })
+    return { error: 'Maximum quantity per product is 99' }
+  }
+
+  return { customer, quantities }
+}
+
+export const requestOtp = async (req, res, next) => {
+  const validated = validateOrder(req.body)
+  if (validated.error) return res.status(400).json({ message: validated.error })
+
+  try {
+    await requestOrderOtp(req.customerId, validated.customer, validated.quantities)
+    return res.json({ message: `A verification code was sent to ${validated.customer.email.trim()}` })
+  } catch (error) {
+    if (error.statusCode) return res.status(error.statusCode).json({ message: error.message })
+    return next(error)
+  }
+}
+
+export const verifyOtp = async (req, res, next) => {
+  if (typeof req.body.code !== 'string' || !/^\d{6}$/.test(req.body.code)) {
+    return res.status(400).json({ message: 'Enter the 6-digit verification code' })
   }
 
   try {
-    const order = await placeOrderInService(req.customerId, customer, quantities)
+    const order = await verifyOrderOtp(req.customerId, req.body.code)
     return res.status(201).json({
       message: 'Order placed successfully',
       data: order
     })
   } catch (error) {
-    if (error.statusCode === 400) {
+    if (error.statusCode) {
       return res.status(error.statusCode).json({ message: error.message })
     }
     return next(error)

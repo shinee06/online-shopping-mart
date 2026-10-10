@@ -29,13 +29,20 @@ Customer routes:
 - `POST /api/auth/register` and `POST /api/auth/login`
 - `GET /api/products` and `GET /api/products/:id`
 - `GET` and `PUT /api/customers/me`
-- `GET` and `POST /api/orders`
+- `GET /api/orders`
+- `POST /api/orders/otp/request` and `POST /api/orders/otp/verify`
 - `GET`, `POST`, and `DELETE /api/wishlist`
 
 Customer profile and order routes require `Authorization: Bearer <token>`.
 Passwords are hashed with Node's built-in scrypt implementation. Order totals
 are calculated by the server from current product prices; this demo does not
 process payments.
+
+Checkout sends a six-digit email code before creating an order. Configure
+`RESEND_API_KEY` and `OTP_FROM_EMAIL` in `.env`; the sender address must be
+verified with Resend. Codes expire after five minutes, allow five attempts,
+and can be requested again after one minute. Pending verification codes are
+kept in memory, so a backend restart clears them.
 
 The existing admin product API remains available at `/products` for
 compatibility with the current admin UI. It is not protected by admin
