@@ -69,9 +69,9 @@ body {
   background-color: #eef3fb;
   background-image:
     radial-gradient(ellipse at 12% 18%, rgb(129 140 248 / 23%), transparent 34%),
-    radial-gradient(ellipse at 88% 82%, rgb(45 212 191 / 18%), transparent 32%),
+    radial-gradient(ellipse at 88% 82%, rgb(166 93 104 / 18%), transparent 32%),
     radial-gradient(ellipse at 80% 12%, rgb(196 181 253 / 25%), transparent 28%),
-    linear-gradient(135deg, #edf4ff 0%, #f5f3ff 52%, #effaf8 100%);
+    linear-gradient(135deg, #edf4ff 0%, #f5f3ff 52%, #f4e6e9 100%);
   background-attachment: fixed;
 }
 
@@ -183,7 +183,7 @@ body {
 .dashboard-page {
   min-height: 100vh;
   padding: 1px 0;
-  background: linear-gradient(135deg, #eaf3ff 0%, #f3edff 55%, #e7f8f5 100%);
+  background: linear-gradient(135deg, #eaf3ff 0%, #f3edff 55%, #f4e6e9 100%);
 }
 
 .dashboard-container {
@@ -308,8 +308,8 @@ body {
 }
 
 .add-icon {
-  background: #dcfce7;
-  color: #15803d;
+  background: #f4e6e9;
+  color: #722f37;
 }
 
 .search-icon {
@@ -568,11 +568,11 @@ button:hover {
 /* Add to Cart button */
 
 .add-cart-button {
-  background-color: #16a34a;
+  background-color: #722f37;
 }
 
 .add-cart-button:hover {
-  background-color: #15803d;
+  background-color: #722f37;
 }
 
 /* Form buttons */
@@ -877,7 +877,7 @@ select {
 .dashboard-page {
   background:
     radial-gradient(ellipse at 12% 8%, rgb(196 181 253 / 34%), transparent 34rem),
-    linear-gradient(135deg, #eef4ff 0%, #f6f3ff 55%, #ecfaf6 100%);
+    linear-gradient(135deg, #eef4ff 0%, #f6f3ff 55%, #f4e6e9 100%);
 }
 
 .dashboard-container {
@@ -1109,7 +1109,7 @@ select {
 }
 
 .admin-settings-success {
-  color: #15803d;
+  color: #722f37;
   font-weight: 600;
 }
 
@@ -1124,7 +1124,7 @@ select {
   padding: 1px 0 48px;
   background:
     radial-gradient(ellipse at 8% 4%, rgb(196 181 253 / 34%), transparent 34rem),
-    linear-gradient(135deg, #eef4ff 0%, #f6f3ff 55%, #ecfaf6 100%);
+    linear-gradient(135deg, #eef4ff 0%, #f6f3ff 55%, #f4e6e9 100%);
 }
 
 .customer-dashboard {
@@ -1259,8 +1259,8 @@ select {
 }
 
 .cart-card-icon {
-  background: #dcfce7;
-  color: #15803d;
+  background: #f4e6e9;
+  color: #722f37;
 }
 
 .orders-card-icon {
@@ -1752,8 +1752,8 @@ button {
 .auth-login-page {
   padding: 32px;
   background:
-    radial-gradient(ellipse at 10% 12%, rgb(204 251 241 / 58%), transparent 34rem),
-    radial-gradient(ellipse at 92% 90%, rgb(204 251 241 / 50%), transparent 32rem),
+    radial-gradient(ellipse at 10% 12%, rgb(244 230 233 / 58%), transparent 34rem),
+    radial-gradient(ellipse at 92% 90%, rgb(244 230 233 / 50%), transparent 32rem),
     #f3f7f9;
 }
 
@@ -1766,7 +1766,7 @@ button {
   border: 1px solid rgb(255 255 255 / 78%);
   border-radius: 30px;
   background: #fff;
-  box-shadow: 0 30px 90px rgb(12 50 58 / 13%);
+  box-shadow: 0 30px 90px rgb(114 47 55 / 13%);
 }
 
 .login-brand-panel {
@@ -1779,8 +1779,8 @@ button {
   padding: 42px 44px 34px;
   color: #fff;
   background:
-    radial-gradient(ellipse at 85% 8%, rgb(105 236 215 / 48%), transparent 42%),
-    linear-gradient(145deg, #08bda9 0%, #008b80 54%, #07544f 100%);
+    radial-gradient(ellipse at 85% 8%, rgb(166 93 104 / 48%), transparent 42%),
+    linear-gradient(145deg, #722f37 0%, #722f37 54%, #722f37 100%);
 }
 
 .brand-logo {
@@ -1817,7 +1817,7 @@ button {
 }
 
 .brand-logo-accent {
-  color: #b9fff0;
+  color: #f4e6e9;
 }
 
 .brand-message {
@@ -1831,7 +1831,7 @@ button {
 .brand-kicker,
 .login-eyebrow {
   margin: 0 0 14px;
-  color: #bafff1;
+  color: #f4e6e9;
   font-size: 0.79rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -1865,7 +1865,7 @@ button {
 
 .brand-panel-footer span {
   padding: 0 8px;
-  color: #a8fff0;
+  color: #f4e6e9;
 }
 
 .brand-decoration {
@@ -1926,13 +1926,13 @@ button {
 }
 
 .portal-choice:hover {
-  color: #007f74;
+  color: #722f37;
 }
 
 .portal-choice-active {
   color: #fff;
-  background: #008f83;
-  box-shadow: 0 3px 8px rgb(0 104 95 / 22%);
+  background: #722f37;
+  box-shadow: 0 3px 8px rgb(114 47 55 / 22%);
 }
 
 .portal-choice-active:hover {
@@ -1945,7 +1945,7 @@ button {
 
 .login-heading .login-eyebrow {
   margin-bottom: 8px;
-  color: #008f83;
+  color: #722f37;
 }
 
 .login-heading h1 {
@@ -1985,23 +1985,23 @@ button {
 }
 
 .login-content-panel .auth-form input:focus {
-  border-color: #00a798;
+  border-color: #722f37;
   background: #fff;
-  box-shadow: 0 0 0 4px rgb(0 167 152 / 12%);
+  box-shadow: 0 0 0 4px rgb(114 47 55 / 12%);
 }
 
 .login-content-panel .auth-form button {
   min-height: 54px;
   margin-top: 8px;
   border-radius: 13px;
-  background: #009b8d;
-  box-shadow: 0 10px 18px rgb(0 143 131 / 18%);
+  background: #722f37;
+  box-shadow: 0 10px 18px rgb(114 47 55 / 18%);
   font-size: 0.97rem;
   font-weight: 800;
 }
 
 .login-content-panel .auth-form button:hover {
-  background: #007f74;
+  background: #722f37;
 }
 
 .login-content-panel .request-error {
@@ -2016,7 +2016,7 @@ button {
 }
 
 .login-signup-prompt a {
-  color: #008f83;
+  color: #722f37;
   font-weight: 750;
   text-decoration: none;
 }
@@ -2032,8 +2032,8 @@ button {
 .product-buttons button:nth-child(3) {
   border: 1px solid transparent;
   border-radius: 9px;
-  background: linear-gradient(135deg, #169b68, #08784f);
-  box-shadow: 0 5px 12px rgb(8 120 79 / 20%);
+  background: linear-gradient(135deg, #722f37, #722f37);
+  box-shadow: 0 5px 12px rgb(114 47 55 / 20%);
   color: #fff;
   font-family: inherit;
   font-weight: 700;
@@ -2044,8 +2044,8 @@ button {
 .product-buttons button:first-child:hover,
 .product-buttons button:nth-child(2):hover,
 .product-buttons button:nth-child(3):hover {
-  background: linear-gradient(135deg, #10845a, #066342);
-  box-shadow: 0 7px 16px rgb(8 120 79 / 28%);
+  background: linear-gradient(135deg, #722f37, #722f37);
+  box-shadow: 0 7px 16px rgb(114 47 55 / 28%);
   transform: translateY(-1px);
 }
 
@@ -2064,8 +2064,8 @@ button {
   width: 214px;
   gap: 7px;
   padding: 16px 12px;
-  background: #00645d;
-  box-shadow: 4px 0 20px rgb(0 60 55 / 12%);
+  background: #722f37;
+  box-shadow: 4px 0 20px rgb(114 47 55 / 12%);
 }
 
 .dashboard-sidebar-brand {
@@ -2090,7 +2090,7 @@ button {
 }
 
 .dashboard-sidebar-brand small {
-  color: #b9e2dc;
+  color: #c88b93;
   font-size: 0.53rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2103,8 +2103,8 @@ button {
   flex: 0 0 36px;
   place-items: center;
   border-radius: 10px;
-  background: #e5fffa;
-  color: #007c70;
+  background: #f4e6e9;
+  color: #722f37;
   font-size: 0.75rem;
   font-weight: 850;
 }
@@ -2113,7 +2113,7 @@ button {
   display: block;
   padding: 11px 12px;
   border-radius: 9px;
-  color: #e1f4f0;
+  color: #f4e6e9;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
@@ -2121,8 +2121,8 @@ button {
 }
 
 .dashboard-sidebar .dashboard-sidebar-home {
-  background: #075650;
-  box-shadow: inset 3px 0 #5be3d0;
+  background: #722f37;
+  box-shadow: inset 3px 0 #a65d68;
   color: #fff;
   font-weight: 750;
 }
@@ -2133,7 +2133,7 @@ button {
 }
 
 .dashboard-sidebar a:focus-visible {
-  outline: 3px solid rgb(22 107 67 / 25%);
+  outline: 3px solid rgb(114 47 55 / 25%);
   outline-offset: 1px;
 }
 
@@ -2163,10 +2163,10 @@ button {
   min-height: 62px;
   margin-bottom: 22px;
   padding: 10px 18px;
-  border: 1px solid #e2ece8;
+  border: 1px solid #f4e6e9;
   border-radius: 12px;
   background: rgb(255 255 255 / 96%);
-  box-shadow: 0 4px 14px rgb(28 70 57 / 5%);
+  box-shadow: 0 4px 14px rgb(114 47 55 / 5%);
 }
 
 .dashboard-header h1 {
@@ -2176,33 +2176,33 @@ button {
 }
 
 .dashboard-profile-link {
-  border-color: #cce7dd;
-  background: #edfaf5;
-  color: #087c67;
+  border-color: #f4e6e9;
+  background: #f4e6e9;
+  color: #722f37;
 }
 
 .dashboard-profile-link:hover {
-  background: #dff5eb;
+  background: #f4e6e9;
 }
 
 .dashboard-welcome {
   margin-bottom: 20px;
-  border: 1px solid #dcece5;
-  background: linear-gradient(120deg, #fff, #f2fbf6);
-  box-shadow: 0 5px 18px rgb(28 70 57 / 5%);
-  color: #263b37;
+  border: 1px solid #f4e6e9;
+  background: linear-gradient(120deg, #fff, #f4e6e9);
+  box-shadow: 0 5px 18px rgb(114 47 55 / 5%);
+  color: #722f37;
 }
 
 .dashboard-eyebrow {
-  color: #07806b;
+  color: #722f37;
 }
 
 .dashboard-welcome h2 {
-  color: #253d38;
+  color: #722f37;
 }
 
 .dashboard-welcome p {
-  color: #647a73;
+  color: #722f37;
 }
 
 .dashboard-menu {
@@ -2213,13 +2213,13 @@ button {
 
 .dashboard-menu a {
   min-height: 116px;
-  border-color: #e0ebe6;
-  box-shadow: 0 4px 14px rgb(28 70 57 / 4%);
+  border-color: #f4e6e9;
+  box-shadow: 0 4px 14px rgb(114 47 55 / 4%);
 }
 
 .dashboard-menu a:hover {
-  border-color: #91cbb3;
-  box-shadow: 0 8px 20px rgb(22 107 81 / 10%);
+  border-color: #c88b93;
+  box-shadow: 0 8px 20px rgb(114 47 55 / 10%);
 }
 
 /* Shared pale green backdrop across the app's pages */
@@ -2230,9 +2230,9 @@ body,
 .profile-page,
 .auth-login-page {
   background:
-    radial-gradient(ellipse at 6% 12%, rgb(187 230 200 / 42%), transparent 34rem),
-    radial-gradient(ellipse at 94% 88%, rgb(208 237 216 / 48%), transparent 32rem),
-    linear-gradient(135deg, #edf7ef 0%, #f5faf6 50%, #eaf4ec 100%);
+    radial-gradient(ellipse at 6% 12%, rgb(200 139 147 / 42%), transparent 34rem),
+    radial-gradient(ellipse at 94% 88%, rgb(244 230 233 / 48%), transparent 32rem),
+    linear-gradient(135deg, #f4e6e9 0%, #f4e6e9 50%, #f4e6e9 100%);
   background-attachment: fixed;
 }
 
@@ -2344,5 +2344,92 @@ body,
 
   .login-heading h1 {
     font-size: 2rem;
+  }
+}
+
+/* Clear logo-first sign-in branding with gentle, motion-safe animations. */
+@keyframes brand-logo-arrive {
+  from { opacity: 0; transform: translateY(14px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes brand-copy-arrive {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes brand-ring-drift {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: .75; }
+  50% { transform: scale(1.045) rotate(5deg); opacity: 1; }
+}
+
+@keyframes brand-sparkle-pulse {
+  0%, 100% { transform: scale(.94); opacity: .55; }
+  50% { transform: scale(1.08); opacity: .9; }
+}
+
+.login-brand-panel {
+  justify-content: flex-start;
+  gap: clamp(20px, 4vh, 42px);
+}
+
+.brand-logo-card {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: min(100%, 390px);
+  padding: 9px 12px;
+  border: 1px solid rgb(255 255 255 / 75%);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 13px 32px rgb(48 17 25 / 18%);
+  animation: brand-logo-arrive .8s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.brand-logo-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.brand-message {
+  max-width: 350px;
+  margin: 0;
+  padding: 0;
+  animation: brand-copy-arrive .8s .18s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.brand-kicker {
+  margin-bottom: 11px;
+  font-size: .72rem;
+}
+
+.brand-message h2 {
+  max-width: 340px;
+  margin-bottom: 13px;
+  font-size: clamp(1.8rem, 2.8vw, 2.45rem);
+  line-height: 1.12;
+}
+
+.brand-description {
+  max-width: 310px;
+  font-size: .9rem;
+  line-height: 1.65;
+}
+
+.brand-panel-footer { margin-top: auto; }
+.brand-decoration-one { animation: brand-ring-drift 12s ease-in-out infinite; }
+.brand-decoration-two { animation: brand-sparkle-pulse 4s ease-in-out infinite; }
+
+@media (max-width: 920px) {
+  .login-brand-panel { min-height: 280px; gap: 22px; }
+  .brand-logo-card { width: min(100%, 330px); }
+  .brand-message { margin-top: 0; padding: 0; }
+  .brand-message h2 { font-size: clamp(1.65rem, 4vw, 2.1rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo-card, .brand-message, .brand-decoration-one, .brand-decoration-two {
+    animation: none !important;
   }
 }

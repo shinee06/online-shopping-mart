@@ -101,21 +101,21 @@ const AdminSettings = () => {
           <h1>Admin Settings</h1>
           <p>Manage the store details and preferences shown in this browser.</p>
         </div>
-        <Link className="text-link" to="/dashboard">
+        <Link className="admin-settings-back" to="/admin">
           ← Back to Dashboard
         </Link>
       </header>
 
       <form className="admin-settings-card" onSubmit={handleSave}>
         <section className="admin-settings-section">
-          <h2>Store information</h2>
+          <div className="admin-settings-section-heading"><span className="admin-settings-icon" aria-hidden="true">▣</span><div><h2>Store information</h2>
           <p className="admin-settings-help">
             These details are saved locally for this admin interface.
-          </p>
+          </p></div></div>
 
           <div className="admin-settings-field">
             <label htmlFor="admin-store-name">Store display name</label>
-            <input
+            <div className="admin-settings-input"><span aria-hidden="true">▣</span><input
               id="admin-store-name"
               name="displayName"
               type="text"
@@ -123,12 +123,12 @@ const AdminSettings = () => {
               value={settings.displayName}
               onChange={handleChange}
               required
-            />
+            /></div>
           </div>
 
           <div className="admin-settings-field">
             <label htmlFor="admin-email">Admin contact email</label>
-            <input
+            <div className="admin-settings-input"><span aria-hidden="true">✉</span><input
               id="admin-email"
               name="adminEmail"
               type="email"
@@ -136,12 +136,12 @@ const AdminSettings = () => {
               placeholder="admin@example.com"
               value={settings.adminEmail}
               onChange={handleChange}
-            />
+            /></div>
           </div>
         </section>
 
         <section className="admin-settings-section">
-          <h2>Dashboard preferences</h2>
+          <div className="admin-settings-section-heading"><span className="admin-settings-icon" aria-hidden="true">⚙</span><div><h2>Dashboard preferences</h2><p className="admin-settings-help">Choose what you see when you manage your store.</p></div></div>
           <label className="admin-settings-toggle" htmlFor="show-welcome">
             <span>
               <strong>Show welcome panel</strong>

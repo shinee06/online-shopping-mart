@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { apiRequest } from '../services/api.js'
+import CategoryIcon from '../components/CategoryIcon.jsx'
 
 const categories = [
-  { name: 'Laptops', icon: '▱', words: ['laptop', 'notebook'] },
-  { name: 'Mobiles', icon: '▯', words: ['mobile', 'phone', 'smartphone'] },
-  { name: 'Headphones', icon: '◖', words: ['headphone', 'earbud', 'speaker', 'audio'] },
-  { name: 'Smartwatches', icon: '◷', words: ['watch'] },
-  { name: 'Cameras', icon: '▣', words: ['camera'] },
-  { name: 'Accessories', icon: '⌁', words: ['accessory', 'charger', 'cable'] }
+  { name: 'Laptops', icon: 'laptop', words: ['laptop', 'notebook'] },
+  { name: 'Mobiles', icon: 'mobile', words: ['mobile', 'phone', 'smartphone'] },
+  { name: 'Headphones', icon: 'headphones', words: ['headphone', 'earbud', 'speaker', 'audio'] },
+  { name: 'Smartwatches', icon: 'watch', words: ['watch'] },
+  { name: 'Cameras', icon: 'camera', words: ['camera'] },
+  { name: 'Televisions', icon: 'television', words: ['television', 'smart tv', ' tv'] },
+  { name: 'Accessories', icon: 'accessories', words: ['accessory', 'charger', 'cable', 'keyboard', 'mouse', 'power bank'] }
 ]
 const productImages = [
   'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=85',
@@ -43,7 +45,10 @@ const Shop = () => {
   const filteredProducts = useMemo(() => products.filter((product) => {
     const text = `${product.name || ''} ${product.description || ''} ${product.category || ''}`.toLowerCase()
     const category = categories.find((item) => item.name === activeCategory)
-    return text.includes(search.trim().toLowerCase()) && (!category || category.words.some((word) => text.includes(word)))
+    const matchesCategory = !activeCategory || (product.category
+      ? product.category.trim().toLowerCase() === activeCategory.trim().toLowerCase()
+      : category.words.some((word) => text.includes(word)))
+    return text.includes(search.trim().toLowerCase()) && matchesCategory
   }), [activeCategory, products, search])
 
   const handleSearchChange = (value) => {
@@ -78,7 +83,7 @@ const Shop = () => {
         <section className="products-category-section" aria-label="Shop by category">
           <div className="products-section-heading"><h2><span aria-hidden="true">▣</span> Shop by Category</h2>{activeCategory && <button type="button" onClick={() => setActiveCategory('')}>Clear category</button>}</div>
           <div className="products-category-grid">
-            {categories.map((category, index) => <button className={`products-category-card category-tone-${index}${activeCategory === category.name ? ' selected' : ''}`} type="button" key={category.name} onClick={() => setActiveCategory((current) => current === category.name ? '' : category.name)}><span className="products-category-icon" aria-hidden="true">{category.icon}</span><strong>{category.name}</strong><small>Explore {category.name.toLowerCase()}</small></button>)}
+            {categories.map((category, index) => <button className={`products-category-card category-tone-${index}${activeCategory === category.name ? ' selected' : ''}`} type="button" key={category.name} onClick={() => setActiveCategory((current) => current === category.name ? '' : category.name)}><span className="products-category-icon"><CategoryIcon name={category.icon} /></span><strong>{category.name}</strong><small>Explore {category.name.toLowerCase()}</small></button>)}
           </div>
         </section>
 

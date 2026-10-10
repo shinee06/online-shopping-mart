@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "employeeId": "EMP-00001",
+    "fullName": "reni",
+    "email": "reni@gmail.com",
+    "phone": "9786764534234",
+    "department": "Sales",
+    "position": "manger",
+    "employmentType": "Part-time",
+    "startDate": "2026-10-26",
+    "status": "Active",
+    "notes": ""
+  },
+  {
+    "id": 2,
+    "employeeId": "EMP-00002",
+    "fullName": "sameer",
+    "email": "sameer@gmail.com",
+    "phone": "97957e65478",
+    "department": "Operations",
+    "position": "manger",
+    "employmentType": "Full-time",
+    "startDate": "2026-10-21",
+    "status": "Active",
+    "notes": ""
+  }
+]

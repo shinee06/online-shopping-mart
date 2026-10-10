@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { apiRequest } from '../services/api.js'
+import CategoryIcon from '../components/CategoryIcon.jsx'
 import CartService from '../services/CartService.jsx'
 
 const categories = [
-  { name: 'Laptops', icon: '▱', keywords: ['laptop', 'notebook'], subtitle: 'Work, study and play' },
-  { name: 'Mobiles', icon: '▯', keywords: ['mobile', 'phone', 'smartphone'], subtitle: 'Stay connected' },
-  { name: 'Headphones', icon: '◖', keywords: ['headphone', 'earbud', 'speaker', 'audio'], subtitle: 'Feel the sound' },
-  { name: 'Smartwatches', icon: '◷', keywords: ['watch'], subtitle: 'Track your day' },
-  { name: 'Cameras', icon: '▣', keywords: ['camera'], subtitle: 'Capture moments' },
-  { name: 'Accessories', icon: '⌁', keywords: ['accessory', 'charger', 'cable'], subtitle: 'Small things, big impact' }
+  { name: 'Laptops', icon: 'laptop', keywords: ['laptop', 'notebook'], subtitle: 'Work, study and play' },
+  { name: 'Mobiles', icon: 'mobile', keywords: ['mobile', 'phone', 'smartphone'], subtitle: 'Stay connected' },
+  { name: 'Headphones', icon: 'headphones', keywords: ['headphone', 'earbud', 'speaker', 'audio'], subtitle: 'Feel the sound' },
+  { name: 'Smartwatches', icon: 'watch', keywords: ['watch'], subtitle: 'Track your day' },
+  { name: 'Cameras', icon: 'camera', keywords: ['camera'], subtitle: 'Capture moments' },
+  { name: 'Televisions', icon: 'television', keywords: ['television', 'smart tv', ' tv'], subtitle: 'Upgrade movie night' },
+  { name: 'Accessories', icon: 'accessories', keywords: ['accessory', 'charger', 'cable', 'keyboard', 'mouse', 'power bank'], subtitle: 'Small things, big impact' }
 ]
 
 const fallbackImages = [
@@ -80,14 +82,16 @@ const Products = () => {
   }, [])
 
   const filteredProducts = useMemo(() => products.filter((product) => {
-    const name = `${product.name || ''} ${product.description || ''} ${product.category || ''}`.toLowerCase()
-    const matchesSearch = name.includes(search.toLowerCase().trim())
+    const searchableText = `${product.name || ''} ${product.description || ''} ${product.category || ''}`.toLowerCase()
+    const matchesSearch = searchableText.includes(search.toLowerCase().trim())
     const matchesPrice = priceFilter === 'all' ||
       (priceFilter === 'below5000' && Number(product.price) < 5000) ||
       (priceFilter === '5000to20000' && Number(product.price) >= 5000 && Number(product.price) <= 20000) ||
       (priceFilter === 'above20000' && Number(product.price) > 20000)
     const category = categories.find((item) => item.name.toLowerCase() === activeCategory.toLowerCase())
-    const matchesCategory = !category || category.keywords.some((word) => name.includes(word))
+    const matchesCategory = !activeCategory || (product.category
+      ? product.category.trim().toLowerCase() === activeCategory.trim().toLowerCase()
+      : category.keywords.some((word) => searchableText.includes(word)))
     const matchesBrand = activeCategory.toLowerCase() !== 'mobiles' || activeBrand === 'All' || getMobileBrand(product) === activeBrand.toLowerCase()
     return matchesSearch && matchesPrice && matchesCategory && matchesBrand
   }), [activeBrand, activeCategory, priceFilter, products, search])
@@ -116,7 +120,7 @@ const Products = () => {
           <div className="products-category-grid">
             {categories.map((category, index) => (
               <button className={`products-category-card category-tone-${index}`} type="button" key={category.name} onClick={() => updateQuery('category', category.name)}>
-                <span className="products-category-icon" aria-hidden="true">{category.icon}</span>
+                <span className="products-category-icon"><CategoryIcon name={category.icon} /></span>
                 <strong>{category.name}</strong>
                 <small>{category.subtitle}</small>
               </button>

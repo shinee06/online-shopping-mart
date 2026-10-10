@@ -8,6 +8,7 @@ const EditProduct = () => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
+  const [category, setCategory] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -20,6 +21,7 @@ const EditProduct = () => {
         setName(product.name || '')
         setPrice(String(product.price ?? ''))
         setDescription(product.description || '')
+        setCategory(product.category || '')
       })
       .catch((requestError) => { if (active) setError(requestError.message) })
       .finally(() => { if (active) setLoading(false) })
@@ -38,7 +40,7 @@ const EditProduct = () => {
 
     setSaving(true)
     try {
-      await ProductService.update(id, { name: normalizedName, price: parsedPrice, description: description.trim() })
+      await ProductService.update(id, { name: normalizedName, price: parsedPrice, description: description.trim(), category: category.trim() })
       navigate('/admin/products')
     } catch (requestError) {
       setError(requestError.message)
@@ -61,6 +63,8 @@ const EditProduct = () => {
           <input id="product-price" type="number" min="0" step="0.01" value={price} onChange={(event) => setPrice(event.target.value)} required />
           <label htmlFor="product-description">Description</label>
           <textarea id="product-description" value={description} onChange={(event) => setDescription(event.target.value)} />
+          <label htmlFor="product-category">Category</label>
+          <input id="product-category" type="text" maxLength="100" value={category} onChange={(event) => setCategory(event.target.value)} />
           {error && <p className="request-error" role="alert">{error}</p>}
           <button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save changes'}</button>
         </form>

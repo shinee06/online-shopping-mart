@@ -5,6 +5,7 @@ const links = [
   { to: '/admin/products', label: 'Products', icon: '▣' },
   { to: '/admin/orders', label: 'Orders', icon: '▤' },
   { to: '/admin/customers', label: 'Customers', icon: '♙' },
+  { to: '/admin/employees', label: 'Employees', icon: '♟' },
   { to: '/admin/inventory', label: 'Inventory', icon: '▧' },
   { to: '/admin/reports', label: 'Reports', icon: '▥' },
   { to: '/admin/profile', label: 'Profile', icon: '◉' },

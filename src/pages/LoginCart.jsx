@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiRequest, saveAuthentication } from '../services/api.js'
+import shineemartLogo from '../assets/shineemart-logo.svg'
 
 const LoginCart = () => {
   const navigate = useNavigate()
@@ -33,16 +34,7 @@ const LoginCart = () => {
     <main className="auth-page auth-login-page">
       <section className="login-shell" aria-label="ShineeMart sign in">
         <aside className="login-brand-panel">
-          <div className="brand-logo" aria-label="shineeMart">
-            <span className="brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none">
-                <path d="M9 17h30l-3 23H12L9 17Z" />
-                <path d="M17 19v-5a7 7 0 0 1 14 0v5" />
-                <path d="m20 28 3 3 6-7" />
-              </svg>
-            </span>
-            <span>shinee<span className="brand-logo-accent">Mart</span></span>
-          </div>
+          <div className="brand-logo-card"><img className="brand-logo-image" src={shineemartLogo} alt="ShineeMart — Shop with ease" /></div>
 
           <div className="brand-message">
             <p className="brand-kicker">A little joy in every delivery</p>

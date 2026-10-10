@@ -1,0 +1,23 @@
+.admin-customers-view-toggle { display: inline-flex; flex: 0 0 auto; gap: 2px; padding: 3px; border: 1px solid #f4e6e9; border-radius: 9px; background: #f4e6e9; }
+.admin-customers-view-toggle button { display: grid; width: 32px; height: 29px; place-items: center; border: 0; border-radius: 6px; background: transparent; color: #728890; font-size: 1rem; cursor: pointer; }
+.admin-customers-view-toggle button.is-active { background: #fff; color: #722f37; box-shadow: 0 1px 4px rgb(114 47 55 / 12%); }
+.admin-customers-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+.admin-customer-card { display: grid; min-width: 0; align-content: start; gap: 11px; padding: 13px; border: 1px solid #f4e6e9; border-radius: 11px; background: linear-gradient(155deg, #fff, #f4e6e9); box-shadow: 0 4px 13px rgb(114 47 55 / 4%); }
+.admin-customer-card > header { display: flex; min-width: 0; align-items: center; gap: 8px; }
+.admin-customer-card-avatar { display: grid; width: 35px; height: 35px; flex: 0 0 35px; place-items: center; border-radius: 10px; background: linear-gradient(145deg, #c88b93, #f4e6e9); color: #722f37; font-size: .82rem; font-weight: 800; }
+.admin-customer-card > header > div { display: grid; min-width: 0; flex: 1; gap: 3px; }
+.admin-customer-card > header strong { overflow: hidden; color: #304b5d; font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
+.admin-customer-card > header small { color: #8697a1; font-size: .61rem; }
+.admin-customer-card .admin-customer-role { flex: 0 0 auto; }
+.admin-customer-card-email { display: flex; min-width: 0; align-items: center; gap: 7px; color: #722f37; font-size: .69rem; text-decoration: none; }
+.admin-customer-card-email span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-customer-card-email:hover { color: #722f37; }
+.admin-customer-card-detail { display: flex; justify-content: space-between; gap: 8px; padding-bottom: 7px; border-bottom: 1px solid #f4e6e9; font-size: .65rem; }
+.admin-customer-card-detail span, .admin-customer-card-address > span { color: #82939b; }
+.admin-customer-card-detail strong { overflow: hidden; color: #506a76; font-size: .65rem; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.admin-customer-card-address p { overflow: hidden; display: -webkit-box; margin: 5px 0 0; color: #a65d68; font-size: .66rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.admin-customer-card > footer { display: flex; justify-content: space-between; gap: 8px; padding-top: 7px; border-top: 1px solid #f4e6e9; }
+.admin-customer-card > footer button, .admin-customer-card > footer a { padding: 0; border: 0; background: transparent; color: #722f37; font: inherit; font-size: .64rem; text-decoration: none; cursor: pointer; }
+.admin-customer-card > footer button:hover, .admin-customer-card > footer a:hover { text-decoration: underline; }
+.admin-customer-card-extra { margin: 0; color: #85958e; font-size: .62rem; }
+@media (max-width: 700px) { .admin-customers-view-toggle { align-self: flex-end; } }

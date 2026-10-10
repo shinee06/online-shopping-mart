@@ -4,7 +4,7 @@ import {
   updateProduct as updateProductInService
 } from '../../services/productService.js'
 
-const parseProduct = ({ name, price, description }) => {
+const parseProduct = ({ name, price, description, category = '' }) => {
   const parsedPrice = Number(price)
 
   if (
@@ -16,7 +16,9 @@ const parseProduct = ({ name, price, description }) => {
     price === '' ||
     !Number.isFinite(parsedPrice) ||
     parsedPrice < 0 ||
-    typeof description !== 'string'
+    typeof description !== 'string' ||
+    typeof category !== 'string' ||
+    category.trim().length > 100
   ) {
     return null
   }
@@ -24,7 +26,8 @@ const parseProduct = ({ name, price, description }) => {
   return {
     name: name.trim(),
     price: parsedPrice,
-    description: description.trim()
+    description: description.trim(),
+    category: category.trim()
   }
 }
 

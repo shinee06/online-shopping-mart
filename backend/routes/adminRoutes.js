@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import adminProductRoutes from '../src/routes/adminProductRoutes.js'
+import employeeRoutes from './employeeController.js'
 import requireAdmin from '../middleware/adminMiddleware.js'
 import {
   getCustomers,
@@ -16,6 +17,7 @@ router.use(requireAdmin)
 router.get('/dashboard', getDashboardOverview)
 router.get('/customers', getCustomers)
 router.get('/orders', getOrders)
+router.use('/employees', employeeRoutes)
 
 // Product mutation routes also apply requireAdmin when mounted independently.
 router.use('/products', adminProductRoutes)

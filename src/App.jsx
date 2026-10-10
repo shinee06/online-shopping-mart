@@ -27,6 +27,11 @@ import AdminSettings from './admin/AdminSettings.jsx'
 import AdminLogin from './pages/admin/AdminLogin.jsx'
 import AdminRegister from './pages/admin/AdminRegister.jsx'
 import AdminProfile from './pages/admin/AdminProfile.jsx'
+import EmployeeLogin from './pages/employees/EmployeeLogin.jsx'
+import EmployeeManagement from './pages/employees/EmployeeManagement.jsx'
+import EmployeeDetails from './pages/employees/EmployeeDetails.jsx'
+import AddEmployee from './pages/employees/AddEmployee.jsx'
+import EditEmployee from './pages/employees/EditEmployee.jsx'
 import './App.css'
 
 const SidebarIcon = ({ name }) => {
@@ -166,6 +171,7 @@ const AppRoutes = () => (
       <Route path="/login" element={<LoginCart />} />
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/register" element={<AdminRegister />} />
+      <Route path="/employee/login" element={<EmployeeLogin />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/products" element={<Products />} />
@@ -195,6 +201,10 @@ const AppRoutes = () => (
           <Route path="reports" element={<AdminReports />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="profile" element={<AdminProfile />} />
+          <Route path="employees" element={<EmployeeManagement />} />
+          <Route path="employees/new" element={<AddEmployee />} />
+          <Route path="employees/:id" element={<EmployeeDetails />} />
+          <Route path="employees/:id/edit" element={<EditEmployee />} />
         </Route>
       </Route>
 

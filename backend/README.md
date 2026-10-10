@@ -2,9 +2,11 @@
 
 The API uses the existing MySQL `products` table and adds customer and order
 tables. Create the `online_shopping_mart` database and the `products` table
-first, then run `database/schema.sql` against that database. To insert a small
-sample catalog without duplicating these sample names when rerun, run
-`database/seed-products.sql` after the products table exists.
+first, then run `database/schema.sql` against that database. Run
+`database/migration-add-product-category.sql` once to store each product's
+selected category. To insert a small sample catalog without duplicating these
+sample names when rerun, run `database/seed-products.sql` after the products
+table exists.
 
 From the `backend` directory, copy `.env.example` to `.env` and set your MySQL
 credentials and a random `SESSION_SECRET` of at least 32 characters. Do not

@@ -1,14 +1,14 @@
 .ap {
-  --teal-900: #063d36;
-  --teal-600: #0f8f78;
-  --teal-50: #e9f6f2;
+  --teal-900: #722f37;
+  --teal-600: #722f37;
+  --teal-50: #f4e6e9;
   --indigo: #4f46e5;
   --indigo-dark: #4338ca;
   --ink: #14232b;
   --muted: #5d6f78;
-  --line: #dde7e4;
+  --line: #f4e6e9;
   --surface: #ffffff;
-  --page: #f3f8f6;
+  --page: #f4e6e9;
   --danger: #c2371f;
 
   color: var(--ink);
@@ -48,21 +48,21 @@
   box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.14);
 }
 .ap-identity h2 { margin: 0; font-size: 22px; text-transform: capitalize; }
-.ap-email { margin: 4px 0 12px; color: #a9d4ca; font-size: 14px; word-break: break-all; }
+.ap-email { margin: 4px 0 12px; color: #c88b93; font-size: 14px; word-break: break-all; }
 .ap-badge {
   display: inline-block; padding: 4px 12px; border-radius: 999px;
   background: rgba(255,255,255,.14); font-size: 13px; font-weight: 600;
 }
 .ap-badge::before {
   content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 7px;
-  border-radius: 50%; background: #5ee0b8;
+  border-radius: 50%; background: #a65d68;
 }
 .ap-facts { margin: 22px 0 0; text-align: left; }
 .ap-facts div {
   display: flex; justify-content: space-between; gap: 12px;
   padding: 13px 0; border-top: 1px solid rgba(255,255,255,.12); font-size: 14px;
 }
-.ap-facts dt { color: #a9d4ca; }
+.ap-facts dt { color: #c88b93; }
 .ap-facts dd { margin: 0; font-weight: 600; }
 
 /* ---------- panels ---------- */
@@ -107,7 +107,7 @@
   outline: none; border-color: var(--indigo);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, .18);
 }
-.ap-field input:disabled { background: #eef3f1; color: var(--muted); cursor: not-allowed; }
+.ap-field input:disabled { background: #f4e6e9; color: var(--muted); cursor: not-allowed; }
 .ap-field.invalid input { border-color: var(--danger); }
 .ap-hint { color: var(--muted); font-size: 13px; }
 .ap-error { color: var(--danger); font-size: 13px; }
@@ -123,7 +123,7 @@
 
 .ap-switch {
   position: relative; flex: none; width: 46px; height: 26px; padding: 0;
-  border: 0; border-radius: 999px; background: #c5d2ce; cursor: pointer;
+  border: 0; border-radius: 999px; background: #c88b93; cursor: pointer;
   transition: background .2s;
 }
 .ap-switch::after {
