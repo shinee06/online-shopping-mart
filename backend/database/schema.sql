@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS customers (
   phone VARCHAR(40) NOT NULL DEFAULT '',
   address TEXT NOT NULL,
   password_hash VARCHAR(200) NOT NULL,
+  role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

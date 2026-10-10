@@ -16,6 +16,7 @@ const requireAuth = (req, res, next) => {
     }
 
     req.customerId = claims.sub
+    req.role = claims.role === 'admin' ? 'admin' : 'customer'
     next()
   } catch (error) {
     next(error)

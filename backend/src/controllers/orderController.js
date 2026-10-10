@@ -1,7 +1,7 @@
 import {
-  createOrder as createOrderInDAO,
-  listOrdersByCustomer
-} from '../dao/orderDAO.js'
+  getOrdersForCustomer,
+  placeOrder as placeOrderInService
+} from '../../services/orderService.js'
 
 export const placeOrder = async (req, res, next) => {
   const { items, customer } = req.body
@@ -49,7 +49,7 @@ export const placeOrder = async (req, res, next) => {
   }
 
   try {
-    const order = await createOrderInDAO(req.customerId, customer, quantities)
+    const order = await placeOrderInService(req.customerId, customer, quantities)
     return res.status(201).json({
       message: 'Order placed successfully',
       data: order
@@ -64,7 +64,7 @@ export const placeOrder = async (req, res, next) => {
 
 export const getOrders = async (req, res, next) => {
   try {
-    const orders = await listOrdersByCustomer(req.customerId)
+    const orders = await getOrdersForCustomer(req.customerId)
     return res.json({ data: orders })
   } catch (error) {
     return next(error)

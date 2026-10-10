@@ -1,8 +1,8 @@
 import {
-  createProduct as createProductInDAO,
-  deleteProduct as deleteProductInDAO,
-  updateProduct as updateProductInDAO
-} from '../dao/productDAO.js'
+  createProduct as createProductInService,
+  deleteProduct as deleteProductInService,
+  updateProduct as updateProductInService
+} from '../../services/productService.js'
 
 const parseProduct = ({ name, price, description }) => {
   const parsedPrice = Number(price)
@@ -41,7 +41,7 @@ export const createProduct = async (req, res, next) => {
   }
 
   try {
-    const createdProduct = await createProductInDAO(product)
+    const createdProduct = await createProductInService(product)
 
     return res.status(201).json({
       message: 'Product added successfully',
@@ -66,7 +66,7 @@ export const updateProduct = async (req, res, next) => {
   }
 
   try {
-    const result = await updateProductInDAO(id, product)
+    const result = await updateProductInService(id, product)
     if (!result.product) {
       return res.status(404).json({ message: 'Product not found' })
     }
@@ -89,7 +89,7 @@ export const deleteProduct = async (req, res, next) => {
   }
 
   try {
-    const deleted = await deleteProductInDAO(id)
+    const deleted = await deleteProductInService(id)
     if (!deleted) {
       return res.status(404).json({ message: 'Product not found' })
     }

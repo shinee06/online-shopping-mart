@@ -1,100 +1,71 @@
-import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import ProductService from '../services/ProductService.jsx'
 
 const EditProduct = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
-  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleUpdateProduct = async (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    let active = true
+    ProductService.getById(id)
+      .then((product) => {
+        if (!active) return
+        setName(product.name || '')
+        setPrice(String(product.price ?? ''))
+        setDescription(product.description || '')
+      })
+      .catch((requestError) => { if (active) setError(requestError.message) })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [id])
 
-    setMessage('')
-
-    if (name === '' || price === '' || description === '') {
-      setMessage('Please fill all the fields')
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setError('')
+    const normalizedName = name.trim()
+    const parsedPrice = Number(price)
+    if (!normalizedName || price === '' || !Number.isFinite(parsedPrice) || parsedPrice < 0) {
+      setError('Enter a product name and a valid non-negative price.')
       return
     }
 
-    const updatedProduct = {
-      name: name,
-      price: Number(price),
-      description: description
-    }
-
+    setSaving(true)
     try {
-      const response = await fetch(
-        `http://localhost:5000/products/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updatedProduct)
-        }
-      )
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setMessage('Product updated successfully!')
-
-        setTimeout(() => {
-          navigate('/products')
-        }, 1000)
-      } else {
-        setMessage(data.message)
-      }
-    } catch (error) {
-      setMessage('Error updating product')
-      console.log(error)
+      await ProductService.update(id, { name: normalizedName, price: parsedPrice, description: description.trim() })
+      navigate('/admin/products')
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setSaving(false)
     }
   }
 
   return (
-    <div className="product-form-container">
-      <h1>Online Shopping Mart</h1>
-
-      <h2>Edit Product</h2>
-
-      <form onSubmit={handleUpdateProduct}>
-        <label>Product Name</label>
-
-        <input
-          type="text"
-          placeholder="Enter product name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <label>Price</label>
-
-        <input
-          type="number"
-          placeholder="Enter price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-
-        <label>Description</label>
-
-        <textarea
-          placeholder="Enter product description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <button type="submit">
-          Save Changes
-        </button>
-      </form>
-
-      <p className="form-message">{message}</p>
-    </div>
+    <main className="product-form-container">
+      <Link className="text-link" to="/admin/products">← Back to products</Link>
+      <h1>Edit product</h1>
+      {loading ? <p>Loading product…</p> : error && !name ? (
+        <p className="request-error" role="alert">{error}</p>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="product-name">Product name</label>
+          <input id="product-name" type="text" maxLength="255" value={name} onChange={(event) => setName(event.target.value)} required />
+          <label htmlFor="product-price">Price (INR)</label>
+          <input id="product-price" type="number" min="0" step="0.01" value={price} onChange={(event) => setPrice(event.target.value)} required />
+          <label htmlFor="product-description">Description</label>
+          <textarea id="product-description" value={description} onChange={(event) => setDescription(event.target.value)} />
+          {error && <p className="request-error" role="alert">{error}</p>}
+          <button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save changes'}</button>
+        </form>
+      )}
+    </main>
   )
 }
 

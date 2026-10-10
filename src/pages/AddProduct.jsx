@@ -1,103 +1,72 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import ProductService from '../services/ProductService.jsx'
 
 const AddProduct = () => {
   const navigate = useNavigate()
-
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
 
-  const handleAddProduct = async (e) => {
-    e.preventDefault()
-
+  const handleSubmit = async (event) => {
+    event.preventDefault()
     setMessage('')
+    setError('')
 
-    if (name === '' || price === '' || description === '') {
-      setMessage('Please fill all the fields')
+    const normalizedName = name.trim()
+    const parsedPrice = Number(price)
+    if (!normalizedName || price === '' || !Number.isFinite(parsedPrice) || parsedPrice < 0) {
+      setError('Enter a product name and a valid non-negative price.')
       return
     }
 
-    const newProduct = {
-      name: name,
-      price: Number(price),
-      description: description
-    }
-
+    setSaving(true)
     try {
-      const response = await fetch(
-        'http://localhost:5000/products',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newProduct)
-        }
-      )
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setMessage('Product added successfully!')
-
-        setName('')
-        setPrice('')
-        setDescription('')
-
-        setTimeout(() => {
-          navigate('/products')
-        }, 1000)
-      } else {
-        setMessage(data.message)
-      }
-    } catch (error) {
-      setMessage('Error adding product')
-      console.log(error)
+      await ProductService.create({ name: normalizedName, price: parsedPrice, description: description.trim() })
+      setMessage('Product added successfully.')
+      window.setTimeout(() => navigate('/admin/products'), 500)
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setSaving(false)
     }
   }
 
   return (
-    <div className="product-form-container">
-      <h1>Online Shopping Mart</h1>
+    <main className="admin-add-product-page">
+      <section className="admin-add-product-card">
+        <Link className="admin-add-back-link" to="/admin/products"><span aria-hidden="true">←</span> Back to products</Link>
+        <header className="admin-add-heading">
+          <span className="page-eyebrow">PRODUCT CATALOG</span>
+          <h1>Add a new product</h1>
+          <p>Add product details to your store catalog.</p>
+        </header>
 
-      <h2>Add Product</h2>
+        <form className="admin-add-product-form" onSubmit={handleSubmit}>
+          <label htmlFor="product-name">Product name</label>
+          <div className="admin-add-input-wrap"><span aria-hidden="true">◇</span><input id="product-name" type="text" placeholder="Enter product name" maxLength="255" value={name} onChange={(event) => setName(event.target.value)} required /></div>
 
-      <form onSubmit={handleAddProduct}>
-        <label>Product Name</label>
+          <label htmlFor="product-price">Price (INR)</label>
+          <div className="admin-add-input-wrap"><span aria-hidden="true">₹</span><input id="product-price" type="number" min="0" step="0.01" placeholder="Enter price in INR" value={price} onChange={(event) => setPrice(event.target.value)} required /></div>
 
-        <input
-          type="text"
-          placeholder="Enter product name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+          <label htmlFor="product-description">Description</label>
+          <div className="admin-add-input-wrap admin-add-textarea-wrap"><span aria-hidden="true">▤</span><textarea id="product-description" placeholder="Enter product description..." value={description} onChange={(event) => setDescription(event.target.value)} /></div>
 
-        <label>Price</label>
+          <p className="admin-add-image-note"><span aria-hidden="true">ⓘ</span> Product image uploads aren’t supported by the catalog API yet.</p>
 
-        <input
-          type="number"
-          placeholder="Enter price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
+          {error && <p className="request-error" role="alert">{error}</p>}
+          {message && <p className="form-message" role="status">{message}</p>}
 
-        <label>Description</label>
-
-        <textarea
-          placeholder="Enter product description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <button type="submit">
-          Add Product
-        </button>
-      </form>
-
-      <p className="form-message">{message}</p>
-    </div>
+          <div className="admin-add-form-actions">
+            <Link className="admin-add-cancel" to="/admin/products">Cancel</Link>
+            <button className="admin-add-submit" type="submit" disabled={saving}>{saving ? 'Adding product…' : 'Add product'} <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </section>
+    </main>
   )
 }
 

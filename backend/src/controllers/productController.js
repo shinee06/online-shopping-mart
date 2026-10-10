@@ -1,12 +1,9 @@
-import {
-  findProductById,
-  listProducts as listProductsFromDAO
-} from '../dao/productDAO.js'
+import { getProductById, listProducts as listProductsFromService } from '../../services/productService.js'
 import { listReviewsForProduct } from '../dao/reviewDAO.js'
 
 export const listProducts = async (req, res, next) => {
   try {
-    const products = await listProductsFromDAO()
+    const products = await listProductsFromService()
 
     return res.json({
       message: 'Products fetched successfully',
@@ -26,7 +23,7 @@ export const getProduct = async (req, res, next) => {
   }
 
   try {
-    const product = await findProductById(id)
+    const product = await getProductById(id)
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' })
@@ -50,7 +47,7 @@ export const getProductReviews = async (req, res, next) => {
   }
 
   try {
-    const product = await findProductById(productId)
+    const product = await getProductById(productId)
     if (!product) {
       return res.status(404).json({ message: 'Product not found' })
     }

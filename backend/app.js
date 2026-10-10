@@ -4,6 +4,7 @@ import authRoutes from './src/routes/authRoutes.js'
 import customerRoutes from './src/routes/customerRoutes.js'
 import orderRoutes from './src/routes/orderRoutes.js'
 import productRoutes from './src/routes/productRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 import adminProductRoutes from './src/routes/adminProductRoutes.js'
 import wishlistRoutes from './src/routes/wishlistRoutes.js'
 import reviewRoutes from './src/routes/reviewRoutes.js'
@@ -25,6 +26,7 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/wishlist', wishlistRoutes)
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/products', productRoutes)
+app.use('/api/admin', adminRoutes)
 app.use('/products', productRoutes, adminProductRoutes)
 
 app.use((req, res) => {

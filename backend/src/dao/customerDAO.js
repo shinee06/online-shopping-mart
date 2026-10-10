@@ -1,17 +1,18 @@
 import db from '../config/db.js'
 
-const profileColumns = `id, full_name, email, phone, address`
+const profileColumns = `id, full_name, email, phone, address, role`
 
 export const createCustomer = async ({
   fullName,
   email,
   phone,
-  passwordHash
+  passwordHash,
+  role = 'customer'
 }) => {
   const [result] = await db.execute(
-    `INSERT INTO customers (full_name, email, phone, address, password_hash)
-     VALUES (?, ?, ?, '', ?)`,
-    [fullName, email, phone, passwordHash]
+    `INSERT INTO customers (full_name, email, phone, address, password_hash, role)
+     VALUES (?, ?, ?, '', ?, ?)`,
+    [fullName, email, phone, passwordHash, role]
   )
 
   return {
@@ -19,7 +20,8 @@ export const createCustomer = async ({
     full_name: fullName,
     email,
     phone,
-    address: ''
+    address: '',
+    role
   }
 }
 

@@ -62,7 +62,7 @@ const LoginCart = () => {
             <span className="portal-choice portal-choice-active" aria-current="page">
               Customer
             </span>
-            <Link className="portal-choice" to="/dashboard">Admin Portal</Link>
+            <Link className="portal-choice" to="/admin/login">Admin Portal</Link>
           </nav>
 
           <div className="login-heading">

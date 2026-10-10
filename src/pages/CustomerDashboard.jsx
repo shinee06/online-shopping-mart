@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { apiRequest } from '../services/api.js'
 
 const readCustomer = () => {
@@ -24,7 +24,6 @@ const readCartCount = () => {
 }
 
 const CustomerDashboard = () => {
-  const navigate = useNavigate()
   const [customer] = useState(readCustomer)
   const [cartCount, setCartCount] = useState(readCartCount)
   const [orderCount, setOrderCount] = useState(null)
@@ -84,30 +83,9 @@ const CustomerDashboard = () => {
     }
   }, [])
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('user')
-    navigate('/login')
-  }
-
   return (
     <main className="customer-dashboard-page">
       <div className="customer-dashboard">
-        <header className="customer-dashboard-header">
-          <Link className="customer-brand" to="/customer-dashboard">
-            Online Shopping Mart
-          </Link>
-          <nav className="customer-dashboard-nav" aria-label="Customer navigation">
-            <Link to="/shop">Shop</Link>
-            <Link to="/wishlist">Wishlist</Link>
-            <Link to="/orders">Orders</Link>
-            <Link to="/profile">Profile</Link>
-            <button className="secondary-button" onClick={handleLogout}>
-              Log out
-            </button>
-          </nav>
-        </header>
-
         <section className="customer-welcome">
           <span className="page-eyebrow">CUSTOMER DASHBOARD</span>
           <h1>Welcome{customer.fullName ? `, ${customer.fullName}` : ' back'}!</h1>

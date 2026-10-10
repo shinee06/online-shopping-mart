@@ -1,4 +1,4 @@
-import { apiRequest, apiRequestRoot } from './api.js'
+import { apiRequest } from './api.js'
 
 const ProductService = {
   async getAll() {
@@ -17,7 +17,7 @@ const ProductService = {
   },
 
   async create(product) {
-    const response = await apiRequestRoot('/products', {
+    const response = await apiRequest('/admin/products', {
       method: 'POST',
       body: JSON.stringify(product)
     })
@@ -30,7 +30,7 @@ const ProductService = {
       throw new TypeError('Product ID must be a positive integer')
     }
 
-    const response = await apiRequestRoot(`/products/${id}`, {
+    const response = await apiRequest(`/admin/products/${id}`, {
       method: 'PUT',
       body: JSON.stringify(product)
     })
@@ -43,7 +43,7 @@ const ProductService = {
       throw new TypeError('Product ID must be a positive integer')
     }
 
-    const response = await apiRequestRoot(`/products/${id}`, {
+    const response = await apiRequest(`/admin/products/${id}`, {
       method: 'DELETE'
     })
     return response.data ?? response

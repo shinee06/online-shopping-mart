@@ -23,6 +23,7 @@ export const createAuthToken = (customer) => {
   const payload = Buffer.from(JSON.stringify({
     sub: customer.id,
     email: customer.email,
+    role: customer.role === 'admin' ? 'admin' : 'customer',
     exp: Math.floor(Date.now() / 1000) + tokenLifetimeSeconds,
     nonce: randomBytes(12).toString('base64url')
   })).toString('base64url')
