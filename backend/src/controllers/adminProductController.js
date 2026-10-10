@@ -4,8 +4,9 @@ import {
   updateProduct as updateProductInService
 } from '../../services/productService.js'
 
-const parseProduct = ({ name, price, description, category = '' }) => {
+const parseProduct = ({ name, price, description, category = '', image = '', stock = 0 }) => {
   const parsedPrice = Number(price)
+  const parsedStock = Number(stock)
 
   if (
     typeof name !== 'string' ||
@@ -18,7 +19,11 @@ const parseProduct = ({ name, price, description, category = '' }) => {
     parsedPrice < 0 ||
     typeof description !== 'string' ||
     typeof category !== 'string' ||
-    category.trim().length > 100
+    category.trim().length > 100 ||
+    typeof image !== 'string' ||
+    image.length > 2048 ||
+    !Number.isInteger(parsedStock) ||
+    parsedStock < 0
   ) {
     return null
   }
@@ -27,7 +32,9 @@ const parseProduct = ({ name, price, description, category = '' }) => {
     name: name.trim(),
     price: parsedPrice,
     description: description.trim(),
-    category: category.trim()
+    category: category.trim(),
+    image: image.trim(),
+    stock: parsedStock
   }
 }
 

@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ProductService from '../services/ProductService.jsx'
+import AdminViewToggle from '../components/AdminViewToggle.jsx'
 
 const money = (value) => new Intl.NumberFormat('en-IN', {
   style: 'currency', currency: 'INR', maximumFractionDigits: 0
 }).format(Number(value) || 0)
 
 const productImage = (product) => {
+  if (product.image) return product.image
   const label = `${product.name || ''} ${product.category || ''}`.toLowerCase()
   if (/phone|mobile|iphone|galaxy/.test(label)) return 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=240&q=80'
   if (/headphone|earbud|speaker|audio/.test(label)) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=240&q=80'
@@ -23,6 +25,12 @@ const AdminProducts = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [viewMode, setViewMode] = useState(() => localStorage.getItem('adminProductsView') === 'grid' ? 'grid' : 'list')
+
+  const changeView = (nextView) => {
+    setViewMode(nextView)
+    localStorage.setItem('adminProductsView', nextView)
+  }
 
   useEffect(() => {
     let active = true
@@ -87,11 +95,30 @@ const AdminProducts = () => {
       <section className="admin-products-table-panel admin-products-enter" style={{ '--card-delay': '300ms' }}>
         <header className="admin-products-table-heading">
           <div><h2>Product List</h2><p>{searchQuery ? `Matching “${searchParams.get('search')}”` : 'Review and update your catalog listings.'}</p></div>
-          <div className="admin-products-table-tools"><span className="admin-products-count">{visibleProducts.length} {visibleProducts.length === 1 ? 'product' : 'products'}</span><Link className="admin-products-add-button" to="/admin/products/new"><span aria-hidden="true">＋</span> Add Product</Link></div>
+          <div className="admin-products-table-tools">
+            <span className="admin-products-count">{visibleProducts.length} {visibleProducts.length === 1 ? 'product' : 'products'}</span>
+            <AdminViewToggle value={viewMode} onChange={changeView} label="Choose product layout" />
+            <Link className="admin-products-add-button" to="/admin/products/new">Add Product</Link>
+          </div>
         </header>
 
         {loading ? <div className="admin-products-empty">Loading your product catalog…</div>
           : visibleProducts.length === 0 ? <div className="admin-products-empty">{searchQuery ? 'No products match your search.' : 'Your product catalog is empty. Add a product to get started.'}</div>
+             : viewMode === 'grid' ? <div className="admin-products-grid">
+              {visibleProducts.map((product) => (
+                <article className="admin-products-grid-card" key={product.id}>
+                  <img className="admin-products-grid-image" src={productImage(product)} alt="" loading="lazy" />
+                  <div className="admin-products-grid-content">
+                    <span className="admin-products-grid-category">{product.category || 'Electronics'}</span>
+                    <h3>{product.name}</h3>
+                    <strong className="admin-products-price">{money(product.price)}</strong>
+                    <p>{product.description || 'No description provided.'}</p>
+                    <span className="admin-product-status"><i /> In catalog</span>
+                  </div>
+                  <div className="admin-products-grid-actions"><Link to={`/admin/products/${product.id}/edit`} aria-label={`Edit ${product.name}`}>Edit</Link><button type="button" onClick={() => deleteProduct(product)} aria-label={`Delete ${product.name}`}>Delete</button></div>
+                </article>
+              ))}
+            </div>
             : <div className="admin-products-table-scroll"><table className="admin-products-table">
               <thead><tr><th className="admin-products-check"><span className="sr-only">Select</span></th><th>Product</th><th>Price</th><th>Description</th><th>Inventory</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody>{visibleProducts.map((product) => (

@@ -3,19 +3,19 @@
   <desc id="desc">ShineeMart, shop with ease</desc>
   <defs>
     <linearGradient id="bag" x1="10" y1="10" x2="145" y2="145" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#1aa88e"/>
-      <stop offset="1" stop-color="#07594f"/>
+      <stop stop-color="#a65d68"/>
+      <stop offset="1" stop-color="#722f37"/>
     </linearGradient>
   </defs>
   <rect x="8" y="8" width="144" height="144" rx="38" fill="url(#bag)"/>
   <path d="M51 56h58l7 70c.5 5-3.5 9-8.5 9h-55c-5 0-9-4-8.5-9l7-70Z" fill="#fff"/>
   <path d="M69 60V43a11 11 0 0 1 22 0v17m10 0V43a11 11 0 0 1 22 0v17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
-  <path d="m83 82-9 25h13l-5 22 23-31H91l8-16H83Z" fill="#ff9f1c"/>
+  <path d="m83 82-9 25h13l-5 22 23-31H91l8-16H83Z" fill="#a65d68"/>
   <path d="M34 44l4 10 10 4-10 4-4 10-4-10-10-4 10-4 4-10Z" fill="#ffdf75"/>
   <circle cx="122" cy="40" r="12" fill="#ffdf75"/>
   <path d="M122 18v-7m16 13 5-5m-5 26 7 2m-46-23-5-5" stroke="#ffdf75" stroke-width="3.5" stroke-linecap="round"/>
-  <text x="180" y="90" fill="#073f3b" font-family="Arial, Helvetica, sans-serif" font-size="66" font-weight="800" letter-spacing="-3">Shinee<tspan fill="#159b83">Mart</tspan></text>
-  <text x="184" y="127" fill="#5c707b" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="600" letter-spacing="5">SHOP WITH EASE</text>
-  <path d="M185 142h400" stroke="#a8c8c3" stroke-width="2"/>
-  <path d="m586 134 5 8-5 8-5-8 5-8Z" fill="#ff9f1c"/>
+  <text x="180" y="90" fill="#4b1c26" font-family="Arial, Helvetica, sans-serif" font-size="66" font-weight="800" letter-spacing="-3">Shinee<tspan fill="#a65d68">Mart</tspan></text>
+  <text x="184" y="127" fill="#72545b" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="600" letter-spacing="5">SHOP WITH EASE</text>
+  <path d="M185 142h400" stroke="#d6b7bd" stroke-width="2"/>
+  <path d="m586 134 5 8-5 8-5-8 5-8Z" fill="#a65d68"/>
 </svg>

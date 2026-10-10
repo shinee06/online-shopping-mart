@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductService from '../services/ProductService.jsx'
+import AdminViewToggle from '../components/AdminViewToggle.jsx'
 
 const money = (value) => new Intl.NumberFormat('en-IN', {
   style: 'currency', currency: 'INR', maximumFractionDigits: 0
 }).format(Number(value) || 0)
 
 const productImage = (product) => {
+  if (product.image) return product.image
   const name = String(product.name || '').toLowerCase()
   if (/phone|mobile|iphone|galaxy/.test(name)) return 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=160&q=80'
   if (/headphone|earbud|speaker|audio/.test(name)) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=160&q=80'
@@ -25,6 +27,12 @@ const AdminInventory = () => {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(1)
+  const [viewMode, setViewMode] = useState(() => localStorage.getItem('adminInventoryView') === 'grid' ? 'grid' : 'list')
+
+  const changeView = (nextView) => {
+    setViewMode(nextView)
+    localStorage.setItem('adminInventoryView', nextView)
+  }
 
   useEffect(() => {
     let active = true
@@ -60,11 +68,19 @@ const AdminInventory = () => {
       <section className="admin-inventory-panel" aria-label="Product inventory">
         <div className="admin-inventory-toolbar">
           <label className="admin-inventory-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search products</span><input type="search" placeholder="Search products..." value={search} onChange={(event) => { setSearch(event.target.value); setPage(1) }} /></label>
-          <label className="admin-inventory-filter"><span aria-hidden="true">▽</span><span>Sort</span><span className="sr-only">Sort products</span><select value={sort} onChange={(event) => { setSort(event.target.value); setPage(1) }}><option value="newest">Recently added</option><option value="name">Product name</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select><span aria-hidden="true">⌄</span></label>
+          <AdminViewToggle value={viewMode} onChange={changeView} label="Choose inventory layout" /><label className="admin-inventory-filter"><span aria-hidden="true">▽</span><span>Sort</span><span className="sr-only">Sort products</span><select value={sort} onChange={(event) => { setSort(event.target.value); setPage(1) }}><option value="newest">Recently added</option><option value="name">Product name</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select><span aria-hidden="true">⌄</span></label>
         </div>
 
         {loading ? <div className="admin-inventory-empty">Loading products…</div>
           : pageProducts.length === 0 ? <div className="admin-inventory-empty">{products.length ? 'No products match your search.' : 'No products are available to display.'}</div>
+             : viewMode === 'grid' ? <div className="admin-inventory-grid">
+              {pageProducts.map((product, index) => (
+                <article className="admin-inventory-grid-card" key={product.id}>
+                  <Link className="admin-inventory-grid-product" to={`/admin/products/${product.id}/edit`}><img src={productImage(product)} alt="" loading="lazy" /><span className="admin-inventory-grid-number">Product {(currentPage - 1) * PAGE_SIZE + index + 1}</span></Link>
+                  <div className="admin-inventory-grid-content"><h2>{product.name}</h2><strong>{money(product.price)}</strong><span className="admin-inventory-status"><i /> Not tracked</span></div>
+                </article>
+              ))}
+            </div>
             : <div className="admin-inventory-table-scroll"><table className="admin-inventory-table">
               <thead><tr><th>#</th><th><span aria-hidden="true">⬡</span> Product</th><th><span aria-hidden="true">₹</span> Price</th><th><span aria-hidden="true">▣</span> Stock status</th></tr></thead>
               <tbody>{pageProducts.map((product, index) => (

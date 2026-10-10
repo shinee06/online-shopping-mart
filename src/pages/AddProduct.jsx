@@ -64,7 +64,8 @@ const AddProduct = () => {
         price: parsedPrice,
         description: description.trim(),
         category: category.trim(),
-        image: imageUrl.trim()
+        image: imageUrl.trim(),
+        stock: Number(stock)
       })
       setMessage('Product added successfully.')
       window.setTimeout(() => navigate('/admin/products'), 500)

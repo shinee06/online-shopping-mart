@@ -4,7 +4,9 @@ The API uses the existing MySQL `products` table and adds customer and order
 tables. Create the `online_shopping_mart` database and the `products` table
 first, then run `database/schema.sql` against that database. Run
 `database/migration-add-product-category.sql` once to store each product's
-selected category. To insert a small sample catalog without duplicating these
+selected category. Run
+`database/migration-add-product-image-stock.sql` once to persist product image URLs
+and stock quantities. To insert a small sample catalog without duplicating these
 sample names when rerun, run `database/seed-products.sql` after the products
 table exists.
 

@@ -1,18 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AdminService from '../services/AdminService.jsx'
+import './AdminDashboard.css'
 
 const money = (value) => new Intl.NumberFormat('en-IN', {
-  style: 'currency', currency: 'INR', maximumFractionDigits: 2
+  style: 'currency', currency: 'INR', maximumFractionDigits: 0
 }).format(Number(value) || 0)
 
+const dateLabel = (value) => {
+  if (!value) return '—'
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })
+}
+
 const quickLinks = [
-  { to: '/admin/products', icon: '▣', title: 'Products', text: 'Add, edit or manage products', tone: 'mint' },
-  { to: '/admin/orders', icon: '▤', title: 'Orders', text: 'View and manage orders', tone: 'blue' },
-  { to: '/admin/customers', icon: '♙', title: 'Customers', text: 'View customer details', tone: 'purple' },
-  { to: '/admin/inventory', icon: '▧', title: 'Inventory', text: 'Track stock and low items', tone: 'orange' },
-  { to: '/admin/reports', icon: '▥', title: 'Reports', text: 'View sales and analytics', tone: 'green' },
-  { to: '/admin/settings', icon: '⚙', title: 'Settings', text: 'Manage store settings', tone: 'slate' }
+  { to: '/admin/products', icon: 'P', title: 'Products', text: 'Add, edit or manage products' },
+  { to: '/admin/orders', icon: 'O', title: 'Orders', text: 'View and manage orders' },
+  { to: '/admin/customers', icon: 'C', title: 'Customers', text: 'View customer details' },
+  { to: '/admin/inventory', icon: 'I', title: 'Inventory', text: 'Track stock and low items' },
+  { to: '/admin/reports', icon: 'R', title: 'Reports', text: 'View sales and analytics' },
+  { to: '/admin/settings', icon: 'S', title: 'Settings', text: 'Manage store settings' }
 ]
 
 const AdminDashboard = () => {
@@ -58,80 +65,72 @@ const AdminDashboard = () => {
     return days
   }, [orders])
   const maxRevenue = Math.max(...weeklyRevenue.map((day) => day.value), 1)
-
   const metrics = [
-    { label: 'Total Products', value: overview?.productCount ?? 0, note: 'In your catalog', icon: '▣', tone: 'mint', to: '/admin/products' },
-    { label: 'Total Customers', value: overview?.customerCount ?? 0, note: 'Registered accounts', icon: '♙', tone: 'blue', to: '/admin/customers' },
-    { label: 'Total Orders', value: overview?.orderCount ?? 0, note: 'Placed in your store', icon: '🛒', tone: 'amber', to: '/admin/orders' },
-    { label: 'Total Revenue', value: money(overview?.revenue), note: 'All-time order revenue', icon: '₹', tone: 'pink', to: '/admin/reports' }
+    { label: 'Total Revenue', value: money(overview?.revenue), note: 'All-time order revenue', hero: true },
+    { label: 'Total Products', value: overview?.productCount ?? 0, note: 'Items in your catalog' },
+    { label: 'Total Customers', value: overview?.customerCount ?? 0, note: 'Registered accounts' },
+    { label: 'Total Orders', value: overview?.orderCount ?? 0, note: 'Orders placed in your store' }
   ]
 
   return (
-    <main className="admin-dashboard-page">
-      {error && <p className="request-error" role="alert">{error}</p>}
-      <section className="admin-dashboard-hero dashboard-enter" aria-label="Welcome">
-        <div className="admin-dashboard-hero-copy">
-          <span className="page-eyebrow">STORE OVERVIEW</span>
-          <h1>Welcome back, {name}!</h1>
-          <p>Here’s an overview of your store performance and activity.</p>
-        </div>
-        <div className="admin-dashboard-hero-art" aria-hidden="true">
-          <span className="hero-orbit">✦</span><span className="hero-store">▤</span>
-          <span className="hero-leaf">✿</span>
-        </div>
-      </section>
+    <main className="ad admin-dashboard-ad">
+      <header className="ad-top">
+        <div><h1>Welcome back, {name}</h1><p>Here’s an overview of your store performance and activity.</p></div>
+        <div className="ad-top-actions"><Link className="ad-btn" to="/admin/products">Add product</Link><Link className="ad-link" to="/admin/reports">View reports</Link></div>
+      </header>
 
-      <section className="admin-dashboard-metrics" aria-label="Store metrics">
-        {metrics.map((metric, index) => (
-          <Link className={`admin-kpi-card ${metric.tone} dashboard-enter`} style={{ '--enter-delay': `${index * 75}ms` }} to={metric.to} key={metric.label}>
-            <span className="admin-kpi-icon" aria-hidden="true">{metric.icon}</span>
-            <span className="admin-kpi-arrow" aria-hidden="true">↗</span>
-            <span className="admin-kpi-label">{metric.label}</span>
-            <strong>{loading ? '…' : metric.value}</strong>
-            <small>{metric.note}</small>
-          </Link>
+      {error && <p className="request-error" role="alert">{error}</p>}
+
+      <section className="ad-kpis" aria-label="Store metrics">
+        {metrics.map((metric) => (
+          <article className={`ad-kpi${metric.hero ? ' hero' : ''}`} key={metric.label}>
+            <span className="ad-kpi-label">{metric.label}</span>
+            <strong className="ad-kpi-value">{loading ? '…' : metric.value}</strong>
+            <small className="ad-kpi-note">{metric.note}</small>
+          </article>
         ))}
       </section>
 
-      <div className="admin-dashboard-content-grid">
-        <section className="admin-quick-panel dashboard-enter" style={{ '--enter-delay': '300ms' }}>
-          <div className="admin-section-heading">
-            <div><span className="admin-section-icon">▣</span><div><h2>Quick Access</h2><p>Jump to important sections to manage your store efficiently.</p></div></div>
-          </div>
-          <div className="admin-quick-grid">
-            {quickLinks.map((item) => (
-              <Link className="admin-quick-link" to={item.to} key={item.title}>
-                <span className={`admin-quick-icon ${item.tone}`} aria-hidden="true">{item.icon}</span>
-                <span><strong>{item.title}</strong><small>{item.text}</small></span>
-                <span className="admin-quick-arrow" aria-hidden="true">›</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="admin-performance-panel dashboard-enter" style={{ '--enter-delay': '375ms' }}>
-          <div className="admin-section-heading"><div><span className="admin-section-icon chart-icon">▥</span><div><h2>Store Performance</h2><p>Revenue over the last 7 days</p></div></div><span className="admin-period-label">This week</span></div>
-          {orders.length === 0 ? (
-            <div className="admin-chart-empty">Your recent order revenue will appear here.</div>
-          ) : (
-            <div className="admin-chart" role="img" aria-label={`Revenue for the last seven days, maximum ${money(maxRevenue)}`}>
-              {weeklyRevenue.map((day, index) => (
-                <div className="admin-chart-column" key={day.label} title={`${day.label}: ${money(day.value)}`}>
-                  <span className="admin-chart-value">{day.value ? money(day.value) : ''}</span>
-                  <span className="admin-chart-bar-wrap"><span className="admin-chart-bar" style={{ '--bar-height': `${Math.max(day.value ? (day.value / maxRevenue) * 100 : 0, day.value ? 8 : 2)}%`, '--bar-delay': `${index * 70}ms` }} /></span>
-                  <small>{day.label}</small>
+      <div className="ad-row ad-row-a">
+        <section className="ad-card" aria-labelledby="admin-revenue-title">
+          <div className="ad-card-head"><div><h2 id="admin-revenue-title">Store performance</h2><p>Revenue over the last 7 days</p></div><Link className="ad-link" to="/admin/reports">Reports</Link></div>
+          {orders.length === 0 ? <p className="admin-dashboard-empty">Recent order revenue will appear here.</p> : (
+            <div className="ad-bars" role="img" aria-label={`Revenue for the last seven days, maximum ${money(maxRevenue)}`}>
+              {weeklyRevenue.map((day) => (
+                <div className="ad-bar-col" key={day.label} title={`${day.label}: ${money(day.value)}`}>
+                  <span className="ad-bar-val">{day.value ? money(day.value) : ''}</span>
+                  <span className="ad-bar-track"><span className={`ad-bar-fill${day.value === maxRevenue ? ' peak' : ''}`} style={{ height: `${Math.max(day.value ? (day.value / maxRevenue) * 100 : 0, day.value ? 8 : 2)}%` }} /></span>
+                  <small className="ad-bar-day">{day.label}</small>
                 </div>
               ))}
             </div>
           )}
-          <div className="admin-performance-note"><span>✦</span><div><strong>{orders.length ? 'Store activity' : 'Ready for your first order?'}</strong><small>{orders.length ? `${orders.length} orders are available in your order history.` : 'Your sales chart will update as orders come in.'}</small></div></div>
+        </section>
+
+        <section className="ad-card" aria-labelledby="admin-quick-title">
+          <div className="ad-card-head"><div><h2 id="admin-quick-title">Quick access</h2><p>Jump to a store section</p></div></div>
+          <nav className="ad-quick" aria-label="Admin dashboard shortcuts">
+            {quickLinks.map((item) => <Link to={item.to} key={item.title}><span className="admin-dashboard-shortcut-icon" aria-hidden="true">{item.icon}</span><span>{item.title}</span><span className="admin-dashboard-shortcut-copy">{item.text}</span></Link>)}
+          </nav>
         </section>
       </div>
 
-      <div className="admin-system-status dashboard-enter" style={{ '--enter-delay': '450ms' }}>
-        <span className="admin-status-symbol">✓</span>
-        <div><strong>System Status</strong><small>Dashboard is connected to your store data.</small></div>
-        <span className="admin-status-pill"><i /> Store overview available</span>
+      <div className="ad-row ad-row-b">
+        <section className="ad-card" aria-labelledby="admin-orders-title">
+          <div className="ad-card-head"><div><h2 id="admin-orders-title">Recent orders</h2><p>Latest orders placed in your store</p></div><Link className="ad-link" to="/admin/orders">All orders</Link></div>
+          {orders.length === 0 ? <p className="admin-dashboard-empty">No orders yet. New orders will show up here.</p> : (
+            <div className="ad-table-wrap"><table className="ad-table"><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Placed</th></tr></thead><tbody>
+              {orders.slice(0, 5).map((order) => <tr key={order.id}><td>#{order.id}</td><td>{order.customer?.fullName || 'Customer'}</td><td>{money(order.total)}</td><td>{dateLabel(order.createdAt || order.created_at)}</td></tr>)}
+            </tbody></table></div>
+          )}
+        </section>
+        <section className="ad-card admin-dashboard-status" aria-labelledby="admin-status-title">
+          <div className="ad-card-head"><div><h2 id="admin-status-title">Store status</h2><p>Administration overview</p></div></div>
+          <div className="admin-dashboard-status-mark" aria-hidden="true">✓</div>
+          <strong>{error ? 'Some dashboard data is unavailable' : 'Your dashboard is ready'}</strong>
+          <p>{error ? 'Refresh the page or check the server connection.' : 'Your store summary and management shortcuts are up to date.'}</p>
+          <Link className="ad-link" to="/admin/settings">Open store settings</Link>
+        </section>
       </div>
     </main>
   )

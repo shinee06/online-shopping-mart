@@ -2,14 +2,14 @@ import db from '../config/db.js'
 
 export const listProducts = async () => {
   const [products] = await db.execute(
-    'SELECT id, name, price, description, category FROM products ORDER BY id DESC'
+    'SELECT id, name, price, description, category, image_url AS image, stock_quantity AS stock FROM products ORDER BY id DESC'
   )
   return products
 }
 
 export const findProductById = async (id) => {
   const [products] = await db.execute(
-    'SELECT id, name, price, description, category FROM products WHERE id = ? LIMIT 1',
+    'SELECT id, name, price, description, category, image_url AS image, stock_quantity AS stock FROM products WHERE id = ? LIMIT 1',
     [id]
   )
   return products[0] || null
@@ -28,25 +28,25 @@ export const findProductsByIds = async (connection, ids) => {
   return products
 }
 
-export const createProduct = async ({ name, price, description, category }) => {
+export const createProduct = async ({ name, price, description, category, image = '', stock = 0 }) => {
   const [result] = await db.execute(
-    'INSERT INTO products (name, price, description, category) VALUES (?, ?, ?, ?)',
-    [name, price, description, category]
+    'INSERT INTO products (name, price, description, category, image_url, stock_quantity) VALUES (?, ?, ?, ?, ?, ?)',
+    [name, price, description, category, image, stock]
   )
-  return { id: result.insertId, name, price, description, category }
+  return { id: result.insertId, name, price, description, category, image, stock }
 }
 
-export const updateProduct = async (id, { name, price, description, category }) => {
+export const updateProduct = async (id, { name, price, description, category, image = '', stock = 0 }) => {
   const [result] = await db.execute(
-    `UPDATE products SET name = ?, price = ?, description = ?, category = ?
+    `UPDATE products SET name = ?, price = ?, description = ?, category = ?, image_url = ?, stock_quantity = ?
      WHERE id = ?`,
-    [name, price, description, category, id]
+    [name, price, description, category, image, stock, id]
   )
 
   return {
     updated: result.affectedRows > 0,
     product: result.affectedRows > 0
-      ? { id, name, price, description, category }
+      ? { id, name, price, description, category, image, stock }
       : await findProductById(id)
   }
 }

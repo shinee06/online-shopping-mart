@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import AdminService from '../services/AdminService.jsx'
+import AdminViewToggle from '../components/AdminViewToggle.jsx'
 
 const money = (value) => new Intl.NumberFormat('en-IN', {
   style: 'currency', currency: 'INR', maximumFractionDigits: 2
@@ -17,6 +18,12 @@ const AdminOrders = () => {
   const [error, setError] = useState('')
   const [period, setPeriod] = useState('all')
   const [expandedOrder, setExpandedOrder] = useState(null)
+  const [viewMode, setViewMode] = useState(() => localStorage.getItem('adminOrdersView') === 'grid' ? 'grid' : 'list')
+
+  const changeView = (nextView) => {
+    setViewMode(nextView)
+    localStorage.setItem('adminOrdersView', nextView)
+  }
 
   useEffect(() => {
     let active = true
@@ -53,12 +60,12 @@ const AdminOrders = () => {
             <button className="selected" type="button" aria-current="page">All Orders <span>{loading ? '…' : orders.length}</span></button>
             <span className="admin-orders-status-note">Status tracking isn’t available yet</span>
           </div>
-          <label className="admin-orders-period"><span aria-hidden="true">▦</span><span className="sr-only">Filter orders by date</span><select value={period} onChange={(event) => setPeriod(event.target.value)}><option value="all">All dates</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select><span aria-hidden="true">⌄</span></label>
+          <div className="admin-orders-toolbar-actions"><AdminViewToggle value={viewMode} onChange={changeView} label="Choose order layout" /><label className="admin-orders-period"><span aria-hidden="true">▦</span><span className="sr-only">Filter orders by date</span><select value={period} onChange={(event) => setPeriod(event.target.value)}><option value="all">All dates</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select><span aria-hidden="true">⌄</span></label></div>
         </div>
 
         {loading ? <div className="admin-orders-empty">Loading orders…</div>
           : filteredOrders.length === 0 ? <div className="admin-orders-empty">{orders.length ? 'No orders in this date range.' : 'No orders have been placed yet.'}</div>
-            : <div className="admin-orders-list">{filteredOrders.map((order, index) => {
+            : <div className={`admin-orders-list${viewMode === 'grid' ? ' is-grid' : ''}`}>{filteredOrders.map((order, index) => {
               const firstItem = order.items?.[0]
               const itemCount = order.items?.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0) || 0
               const isExpanded = expandedOrder === order.id
